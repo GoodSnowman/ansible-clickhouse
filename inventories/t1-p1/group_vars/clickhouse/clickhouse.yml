@@ -1,0 +1,50 @@
+---
+clickhouse_networks_default:
+  - 0.0.0.0/0
+
+clickhouse_shards:
+  s1: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
+  #"{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_fqdn') }}"
+  #"{{ groups['clickhouse'] }}"
+
+clickhouse_zookeeper_hosts: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
+#"{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_fqdn') }}"
+clickhouse_zookeeper_username: clickhouse
+clickhouse_zookeeper_password: "gdsfAVsjcsAKasfgds35te"
+# "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:zk_ch_auth') }}"
+
+clickhouse_dbs_custom:
+  - name: monitoring
+
+
+clickhouse_users_default:
+  - {name: "default", password: "ePhahc7eF1iG2paeXei4", networks: "{{ clickhouse_networks_default }}", profile: "default", quota: "default", comment: "Default user for login if user not defined"}
+  - {name: "readonly", password: "xaeGh4ooz9aaYo3aeche", networks: "{{ clickhouse_networks_default }}", profile: "readonly", quota: "default", comment: "Example of user with readonly access"}
+# "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:ch_default_usr_pass') }}"
+# "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:ch_readonly_usr_pass') }}"
+user_default_password: " --password ePhahc7eF1iG2paeXei4"
+# "--password {{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:ch_default_usr_pass') }}"
+
+clickhouse_users_custom:
+  - name: "grafana"
+    password: "aoth6Vai9Se7chub8ahl"
+#    "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:ch_grafana_usr_pass') }}"
+    dbs:
+      - monitoring
+    networks: '{{ clickhouse_networks_default }}'
+    profile: default
+    quota: default
+
+clickhouse_macros:
+  cluster: "dns_saas"
+  shard: "s1"
+  replica: "{{ ansible_fqdn }}"
+  default_replica_path: "/clickhouse/tables/{shard}/{database}/{table}"
+  default_replica_name: "{replica}"
+
+clickhouse_prometheus:
+  - endpoint: "/metrics"
+    port: "8001"
+    metrics: true
+    events: true
+    asynchronous_metrics: true

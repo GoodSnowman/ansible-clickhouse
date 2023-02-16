@@ -1,0 +1,45 @@
+---
+haproxy_packet_name: haproxy
+
+haproxy_global_raw_options:
+  - stats socket /var/lib/haproxy/stats mode 660 level admin expose-fd listeners
+  - stats timeout 30s
+
+haproxy_frontend:
+  - name: clickhouse
+    bind:
+      - listen: "{{ keepalived_lb_vip }}:9000"
+    mode: tcp
+    default_backend: clickhouse-servers
+
+haproxy_listen:
+  - name: stats
+    description: Global statistics
+    bind:
+      - listen: "{{ ansible_default_ipv4.address }}:8404"
+    mode: http 
+    option:
+      - http-use-htx
+    stats:
+      enable: true
+      refresh: 10s 
+
+haproxy_backend:
+  - name: clickhouse-servers
+    mode: tcp
+    balance: roundrobin
+    server:
+      - name: dc1-v-clickhouse001
+        listen: 10.13.248.51:9000
+        param:
+          - check
+      - name: dc1-v-clickhouse002
+        listen: 10.13.248.52:9000
+        param:
+          - check
+          - backup
+      - name: dc1-v-clickhouse003
+        listen: 10.13.248.53:9000
+        param:
+          - check
+          - backup

@@ -1,0 +1,19 @@
+---
+keepalived_lb_global_defs:
+  - router_id ocp_vrrp
+  - enable_script_security
+  - script_user root
+
+keepalived_lb_track_scripts:
+  - name: chk_haproxy
+    path: "'/usr/bin/killall -0 haproxy'"   # verify the pid existance
+    interval: 2                    # check every 2 seconds
+    weight: 2                      # add 2 points of prio if OK
+
+keepalived_lb_interface_alias: "{{ ansible_default_ipv4.alias }}"
+keepalived_lb_vrrp_instance_name: VRRP_1
+keepalived_lb_virtual_router_id: 50
+keepalived_lb_auth: true
+keepalived_lb_auth_type: PASS
+keepalived_lb_auth_pass: 1savASs3rcz
+# keepalived_lb_auth_pass: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:keepalived_lb_auth_pass') }}"

@@ -1,0 +1,5 @@
+---
+
+clickhouse_supported: true
+clickhouse_proxy_repository: ''
+clickhouse_proxy_repo_key: ''

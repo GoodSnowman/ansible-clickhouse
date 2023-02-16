@@ -1,0 +1,33 @@
+# {{ ansible_managed }}
+
+tickTime={{ zookeeper_tick_time }}
+dataDir={{ zookeeper_data_dir }}
+initLimit={{ zookeeper_init_limit }}
+syncLimit={{ zookeeper_sync_limit }}
+clientPort={{ zookeeper_client_port }}
+
+dynamicConfigFile={{ zookeeper_conf_dir }}/zookeeper.dynamic.cfg
+
+quorum.auth.enableSasl=true
+quorum.auth.learnerRequireSasl=true
+quorum.auth.serverRequireSasl=true
+quorum.cnxn.threads.size=20
+
+4lw.commands.whitelist={{ zookeeper_4lw_commands_whitelist }}
+
+globalOutstandingLimit={{ zookeeper_global_outstanding_limit }}
+preAllocSize={{ zookeeper_prealloc_size }}
+snapCount={{ zookeeper_snap_count }}
+maxClientCnxns={{ zookeeper_max_client_cnxns }}
+minSessionTimeout={{ zookeeper_min_session_timeout }}
+maxSessionTimeout={{ zookeeper_max_session_timeout }}
+
+autopurge.snapRetainCount={{ zookeeper_autopurge_snapretain_count }}
+autopurge.purgeInterval={{ zookeeper_purge_interval }}
+
+  {% if zookeeper_metrics_provider %}
+  
+metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider
+metricsProvider.httpPort=7000
+metricsProvider.exportJvmInfo=true
+  {% endif %}

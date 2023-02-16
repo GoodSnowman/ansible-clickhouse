@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+{{ ansible_managed | comment('xml') }}
+<yandex>
+    <zookeeper>
+{% for host in clickhouse_zookeeper_hosts %}
+        <node index="{{ loop.index }}">
+            <host>{{ host }}</host>
+            <port>{{ clickhouse_zookeeper_port }}</port>
+        </node>
+{% endfor %}
+{% if clickhouse_zookeeper_username or clickhouse_zookeeper_password %}
+        <identity>{{ clickhouse_zookeeper_username }}:{{ clickhouse_zookeeper_password }}</identity>
+{% endif %}
+    </zookeeper>
+</yandex>
