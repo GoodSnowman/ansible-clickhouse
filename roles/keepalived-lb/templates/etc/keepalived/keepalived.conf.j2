@@ -1,0 +1,59 @@
+# This file managed by Ansible
+global_defs {
+{% for global_def in keepalived_lb_global_defs %}
+  {{ global_def }}
+{% endfor %}
+}
+
+{% for track_script in keepalived_lb_track_scripts %}
+vrrp_script {{ track_script.name }} {
+  script    {{ track_script.path }}
+  interval  {{ track_script.interval | default('5') }}
+  weight    {{ track_script.weight | default('2') }}
+  fall      {{ track_script.fall | default('2') }}
+  rise      {{ track_script.rise | default('2') }}
+}
+{% endfor %}
+
+vrrp_instance {{ keepalived_lb_vrrp_instance_name }} {
+  interface         {{ keepalived_lb_interface_alias }}
+  state             {{ keepalived_lb_node_master | ternary( 'MASTER', 'BACKUP' ) }}
+  virtual_router_id {{ keepalived_lb_virtual_router_id }}
+  priority          {{ keepalived_lb_priority }}
+  advert_int        {{ keepalived_lb_advert_int }}
+  garp_master_delay {{ keepalived_lb_garp_master_delay }}
+
+{% if keepalived_lb_auth %}
+  authentication {
+    auth_type {{ keepalived_lb_auth_type }}
+    auth_pass {{ keepalived_lb_auth_pass }}
+  }
+  {% endif %}
+
+  track_interface {
+  {% for track_interface in keepalived_lb_track_interface %}
+    {{ track_interface }}
+  {% endfor %}
+  }
+{% for track_script in keepalived_lb_track_scripts %}
+  track_script {
+    {{ track_script.name }}
+  }
+{% endfor %}
+
+  virtual_ipaddress {
+    {{ keepalived_lb_vip }} label {{ keepalived_lb_interface_alias }}:1 dev {{ keepalived_lb_interface_alias }}
+  }
+  {% for script in keepalived_lb_notify %}
+      {{ script.notify }} {{ script.path }} {{ script.user }}
+  {% endfor %}
+  {% if keepalived_lb_enable_nat_switch %}
+      notify /etc/keepalived/scripts/nat-switch root
+  {% endif %}
+{% for extra_param in keepalived_lb_vrrp_instance_extra_parameters %}
+{{ extra_param }}
+{% endfor %}
+}
+{% for virt_server in keepalived_lb_virtual_servers %}
+  {% include '_virtual_server.j2' %}
+{% endfor %}

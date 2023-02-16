@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  role_name: keepalived-lb
+  author: Dmitriy Petrukhin
+  description: Install and configure keepalived with LB + HA
+  namespace: development
+  company: VTB.CLOUD
+  galaxy_tags:
+    - keepalived
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+  license: MIT
+
+  min_ansible_version: 4

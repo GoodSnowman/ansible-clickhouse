@@ -1,0 +1,43 @@
+{%- set port         = virt_server.port          | default(keepalived_lb_common_virtual_server.port) -%}
+{%- set real_servers = virt_server.real_servers  | default(keepalived_lb_common_virtual_server.real_servers) -%}
+{%- set delay_loop   = virt_server.delay_loop    | default(keepalived_lb_common_virtual_server.delay_loop)    | default('2') -%}
+{%- set lb_algo      = virt_server.lb_algo       | default(keepalived_lb_common_virtual_server.lb_algo)       | default('rr') -%}
+{%- set lb_kind      = virt_server.lb_kind       | default(keepalived_lb_common_virtual_server.lb_kind)       | default('DR') -%}
+{%- set protocol     = virt_server.protocol      | default(keepalived_lb_common_virtual_server.protocol)      | default('TCP') %}
+
+virtual_server {{ keepalived_lb_vip | ipaddr('address') }} {{ port }} {
+  delay_loop {{ delay_loop }}
+  lb_algo {{ lb_algo }}
+  lb_kind {{ lb_kind | upper }}
+  protocol {{ protocol | upper }}
+
+  {% set real_servers = virt_server.real_servers | default(keepalived_lb_common_virtual_server.real_servers) %}
+  {%- for real_server in real_servers -%}
+  real_server {{ real_server.address }} {{ real_server.port | default(virt_server.port) }} {
+
+    {%- set connect_port     =
+      real_server.connect_port    | default(virt_server.connect_port)      | default(keepalived_lb_common_virtual_server.connect_port) -%}
+    {%- set connect_timeout  =
+      real_server.connect_timeout | default(virt_server.connect_timeout)   | default(keepalived_lb_common_virtual_server.connect_timeout) -%}
+    {%- set check_method     =
+      real_server.check_method    | default(virt_server.check_method)      | default(keepalived_lb_common_virtual_server.check_method) | default('') -%}
+    {%- set url_path         =
+      real_server.url_path        | default(virt_server.url_path)          | default(keepalived_lb_common_virtual_server.url_path) | default('') -%}
+    {%- set url_status_code  = 
+      real_server.url_status_code | default(virt_server.url_status_code )  | default(keepalived_lb_common_virtual_server.url_status_code) | default('') %}
+
+    {% if check_method -%}
+    {{ check_method }} {
+      connect_port {{ connect_port }}
+      connect_timeout {{ connect_timeout }}
+      {% if url_path -%}
+      url {
+        path {{ url_path }}
+        {{ ("status_code " + url_status_code if url_status_code) }}
+      }
+      {% endif -%}
+    }
+    {% endif -%}
+  }
+  {% endfor %}
+}

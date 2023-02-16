@@ -1,0 +1,47 @@
+#!/bin/bash
+# This file managed by Ansible
+
+declare -r NOTETYPE="$1"
+declare -r VIP="{{ keepalived_lb_vip }}"
+declare -r NEWSTATE="$3"
+
+declare -r PRIVATE_IP="{{ keepalived_lb_private_ip }}"
+
+
+to_syslog() {
+    logger -p local0.info -i -t "NAT-SWITCHER PARAMS" "$@"
+}
+
+add_rule() {
+    /sbin/iptables -t nat \
+        -A PREROUTING \
+        -d "${VIP}/32" -i {{ keepalived_lb_interface_alias }} \
+        -j DNAT --to-destination "$PRIVATE_IP"
+}
+
+del_rule() {
+    while : ; do
+        /sbin/iptables -t nat \
+            -D PREROUTING \
+            -d "${VIP}/32" -i {{ keepalived_lb_interface_alias }} \
+            -j DNAT --to-destination "$PRIVATE_IP" \
+        || break
+    done
+}
+
+echo $@ | to_syslog
+
+case "$NEWSTATE" in
+    MASTER|FAULT)
+        del_rule
+    ;;
+    BACKUP)
+        add_rule
+    ;;
+    *)
+        to_syslog "Error: unknown state: $NEWSTATE"
+        exit 1
+    ;;
+esac
+
+exit 0

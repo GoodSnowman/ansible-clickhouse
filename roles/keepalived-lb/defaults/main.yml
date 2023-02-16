@@ -1,0 +1,26 @@
+---
+repository_source: external
+keepalived_lb_vip: ''
+keepalived_lb_version: latest
+keepalived_lb_global_defs: []
+keepalived_lb_notify: []
+keepalived_lb_track_interface:
+  - "{{ ansible_default_ipv4.alias }}"
+keepalived_lb_node_master: false
+keepalived_lb_garp_master_delay: 5
+keepalived_lb_advert_int: 1
+keepalived_lb_priority: 100
+keepalived_lb_nopreempt: false
+keepalived_lb_vrrp_instance_name: VI20
+keepalived_lb_virtual_router_id: 60
+keepalived_lb_auth: false
+keepalived_lb_auth_type: PASS
+keepalived_lb_auth_pass: ""
+keepalived_lb_interface_alias: ""
+keepalived_lb_enable_nat_switch: false
+keepalived_lb_private_ip: "{{ ansible_default_ipv4.address }}"
+keepalived_lb_common_virtual_server: {}
+keepalived_lb_track_scripts: []
+keepalived_lb_virtual_servers: []
+keepalived_lb_vrrp_instance_extra_parameters: []
+keepalived_systemd_notify: reload

@@ -1,0 +1,77 @@
+---
+- name: Add repository from nexus(when var repository_source is 'internal')
+  apt_repository:
+    repo: "{{ apt_proxy_repository }}"
+    state: present
+  when: repository_source == 'internal'
+
+- name: Ensure keepalived package is installed
+  ansible.builtin.apt:
+    name: "keepalived=1:{{ keepalived_lb_version }}"
+    state: present
+    update_cache: true
+  notify:
+    - restart keepalived
+  when:
+    - not ansible_check_mode
+    - keepalived_lb_version != 'latest'
+
+- name: Ensure keepalived latest version is installed
+  ansible.builtin.apt:
+    name: "keepalived={{ keepalived_lb_version }}"
+    state: present
+    update_cache: true
+  notify:
+    - restart keepalived
+  when:
+    - not ansible_check_mode
+    - keepalived_lb_version == 'latest'
+
+- name: Ensure keepalived script direcotry is created
+  file:
+    path: /etc/keepalived/scripts/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when:
+    - keepalived_lb_enable_nat_switch | bool
+
+- name: Ensure keepalived haproxy-service-check script is removed
+  file:
+    path: /usr/local/bin/haproxy-service-check.sh
+    state: absent
+
+- name: Ensure keepalived nat_switch script is templated
+  template:
+    src: etc/keepalived/scripts/nat-switch.j2
+    dest: /etc/keepalived/scripts/nat-switch
+    mode: "a+x"
+  when:
+    - keepalived_lb_enable_nat_switch | bool
+
+- name: Ensure keepalived nat_switch script is removed
+  file:
+    path: /etc/keepalived/scripts/nat-switch
+    state: absent
+  when:
+    - not keepalived_lb_enable_nat_switch
+
+- name: Ensure keepalived main config is templated
+  template:
+    src: etc/keepalived/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - "{{ keepalived_systemd_notify }} keepalived"
+
+- name: Ensure keepalived is enabled
+  systemd:
+    name: keepalived
+    enabled: true
+    daemon_reload: true
+    state: started
+  when:
+    - not ansible_check_mode
