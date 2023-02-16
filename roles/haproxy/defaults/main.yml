@@ -1,0 +1,68 @@
+---
+# Can be external or internal
+repository_source: external
+
+haproxy_proxy_repository: ''
+haproxy_repository: "deb http://ppa.launchpad.net/vbernat/haproxy-2.7/ubuntu {{ __lsb_release }} main"
+
+haproxy_version: latest
+# global section
+haproxy_global_log:
+   - address: /dev/log
+     facility: local0
+  # - address: /dev/log
+  #   facility: local1
+     level: notice
+haproxy_global_stats: []
+  # sockets:
+  #   - listen: /run/haproxy/admin.sock
+  # timeout: 30s
+haproxy_global_user: haproxy
+haproxy_global_group: haproxy
+haproxy_global_daemon: true
+haproxy_global_ca_base: /etc/ssl/certs
+haproxy_global_crt_base: /etc/ssl/private
+haproxy_global_ssl_default_bind_ciphers: 'kEECDH+aRSA+AES:kRSA+AES:+AES256:RC4-SHA:!kEDH:!LOW:!EXP:!MD5:!aNULL:!eNULL'
+haproxy_global_ssl_default_bind_ciphersuites: ''
+haproxy_global_ssl_default_bind_options: 'no-sslv3'
+haproxy_global_ssl_default_server_ciphers: 'kEECDH+aRSA+AES:kRSA+AES:+AES256:RC4-SHA:!kEDH:!LOW:!EXP:!MD5:!aNULL:!eNULL'
+haproxy_global_ssl_default_server_ciphersuites: ''
+haproxy_global_ssl_default_server_options: 'no-sslv3'
+haproxy_global_option: []
+
+# defaults section
+haproxy_defaults_log: global
+haproxy_defaults_mode: http
+haproxy_defaults_option:
+  - httplog
+  - dontlognull
+haproxy_default_server_params: []
+haproxy_defaults_timeout:
+  - type: connect
+    timeout: 5000
+  - type: client
+    timeout: 50000
+  - type: server
+    timeout: 50000
+haproxy_defaults_errorfile: false
+
+# ssl (file) map
+haproxy_ssl_map: []
+
+# listen section
+haproxy_listen: []
+
+# front-end section
+haproxy_frontend: []
+
+# user-lists section
+haproxy_userlists: []
+
+# resolvers section:
+haproxy_resolvers: []
+
+# ACL files
+haproxy_acl_files: []
+
+# back-end section
+haproxy_backend: []
