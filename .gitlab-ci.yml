@@ -17,7 +17,6 @@ stages:
 #  - debug,check_replication,check_vars,check_status
 
 .ssh: &ssh
-  - echo "${SRE_ADMIN_KEY}"
   - eval $(ssh-agent -s)
   - touch id_rsa && chmod 600 id_rsa
   - echo "${SRE_ADMIN_KEY}" > id_rsa
