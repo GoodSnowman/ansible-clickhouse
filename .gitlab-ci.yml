@@ -1,0 +1,87 @@
+variables: 
+  AIND: git-registry.service.t1-cloud.ru/sre/docker/ansible:${ANSIBLE_TAG}
+  ANSIBLE_TAG: 2.10.7
+  ANSIBLE_FORCE_COLOR: 'true'
+  ENV: t1-p1
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+stages:
+#  - ansible_lint
+  - check_mode
+  - zookeeper
+  - clickhouse
+  - haproxy_lb
+#  - debug,check_replication,check_vars,check_status
+
+.ssh: &ssh
+  - eval $(ssh-agent -s)
+  - touch id_rsa && chmod 600 id_rsa
+  - echo "${PROD_SSH_KEY}" > id_rsa
+  - ssh-add id_rsa  > /dev/null
+
+before_script:
+  - *ssh
+  - date
+
+check_all_roles:
+  image: ${AIND}
+  stage: check_mode
+  script:
+    - ansible-playbook -i inventories/{$ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --check -vv --diff
+  allow_failure: true
+
+################ Deploy HA Clickhouse cluster ####################
+
+.deploy:
+  image: ${AIND}
+  script:
+    - ansible-playbook -i inventories/{$ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} --diff
+  allow_failure: false
+
+zookeeper_install:
+  extends: .deploy
+  stage: zookeeper
+  variables:
+    ROLE_TAGS: zookeeper_install
+
+zookeeper_config:
+  extends: .deploy
+  stage: zookeeper
+  variables:
+    ROLE_TAGS: zookeeper_config
+
+clickhouse_install:
+  extends: .deploy
+  stage: clickhouse
+  variables:
+    ROLE_TAGS: clickhouse_install
+
+clickhouse_config:
+  extends: .deploy
+  stage: clickhouse
+  variables:
+    ROLE_TAGS: clickhouse_config
+
+clickhouse_remove:
+  extends: .deploy
+  stage: clickhouse
+  variables:
+    ROLE_TAGS: remove
+  only:
+    variables:
+    - $clickhouse_remove == "true"
+  
+haproxy_install:
+  extends: .deploy
+  stage: haproxy_lb
+  variables:
+    ROLE_TAGS: haproxy_install
+
+keepalived_install:
+  extends: .deploy
+  stage: haproxy_lb
+  variables:
+    ROLE_TAGS: keepalived_install

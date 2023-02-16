@@ -7,17 +7,14 @@
     name: "{{ clickhouse_package }}"
     state: absent
     purge: yes
-  become: true
 
 - name: Uninstall by APT | Repo uninstallation
   apt_repository:
     repo: "{{ clickhouse_repo }}"
     state: absent
-  become: true
 
 - name: Uninstall by APT | Apt-key remove repo key
-  apt_key:
-    keyserver: "{{ clickhouse_repo_keyserver }}"
-    id: "{{ clickhouse_repo_key }}"
+  ansible.builtin.file:
+    path: /etc/apt/trusted.gpg.d/clickhouse.asc
     state: absent
-  become: true
+
