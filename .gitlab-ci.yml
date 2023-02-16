@@ -20,7 +20,7 @@ stages:
 .ssh: &ssh
   - eval $(ssh-agent -s)
   - touch id_rsa && chmod 600 id_rsa
-  - echo "${SRE_ADMIN_KEY}" > id_rsa
+  - echo "${PROD_SSH_KEY}" > id_rsa
   - ssh-add id_rsa  > /dev/null
 
 before_script:
@@ -39,7 +39,7 @@ check_all_roles:
 .deploy:
   image: ${AIND}
   script:
-    - ansible-playbook -i inventories/$ENV/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} --diff
+    - ansible-playbook -i inventories/"{$ENV}"/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} --diff
   allow_failure: false
 
 zookeeper_install:
