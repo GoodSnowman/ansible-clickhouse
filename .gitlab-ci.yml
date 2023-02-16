@@ -7,7 +7,8 @@ variables:
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
-
+    - if: $CI_COMMIT_TAG
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 stages:
 #  - ansible_lint
   - check_mode
@@ -19,7 +20,7 @@ stages:
 .ssh: &ssh
   - eval $(ssh-agent -s)
   - touch id_rsa && chmod 600 id_rsa
-  - echo "${SRE_ADMIN_KEY}" > id_rsa
+  - echo "${PROD_SSH_KEY}" > id_rsa
   - ssh-add id_rsa  > /dev/null
 
 before_script:
