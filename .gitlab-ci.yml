@@ -39,7 +39,7 @@ check_all_roles:
 .deploy:
   image: ${AIND}
   script:
-    - ansible-playbook -i inventories/{$ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} --diff
+    - ansible-playbook -i inventories/$ENV/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} --diff
   allow_failure: false
 
 zookeeper_install:
