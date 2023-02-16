@@ -51,8 +51,6 @@
     mode: "ug=rw,o-rwx"
   become: true
 
-
-
 - name: Config | Generate remote_servers config
   template:
     src: remote_servers.j2

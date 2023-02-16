@@ -7,13 +7,13 @@
   ansible.builtin.apt_key:
     keyserver: "{{ haproxy_keyserver }}"
     id: "{{ haproxy_repo_key_id }}"
-  tags: [install]
+  tags: [haproxy_install]
   when: repository_source == 'external'
 
 - name: Add key for haproxy from nexus repository
   ansible.builtin.apt_key:
     url: "{{ haproxy_proxy_repo_key }}"
-  tags: [install]
+  tags: [haproxy_install]
   when: repository_source == 'internal'
 
 - name: Add source repository into sources list
@@ -21,29 +21,37 @@
     repo: "{{ haproxy_repository }}"
     state: present
   when: repository_source == 'external'
-  tags: [install]
+  tags: [haproxy_install]
 
 - name: Add repository from nexus(when var repository_source is 'internal')
   ansible.builtin.apt_repository:
     repo: "{{ haproxy_proxy_repository }}"
     state: present
   when: repository_source == 'internal'
-  tags: [install]
+  tags: [haproxy_install]
   
 - name: Install haproxy
   ansible.builtin.apt:
     name: "{{ haproxy_packet_name }}={{ haproxy_version }}"
     state: present
     update_cache: true
-  tags: [install]
-  notify:
-    - restart haproxy
+  tags: [haproxy_install]
 
 - name: Setting haproxy config
   ansible.builtin.template:
     src: etc/haproxy/haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
     validate: "haproxy -f %s -c"
-  tags: [install]
+  tags: [haproxy_install]
   notify:
     - reload haproxy
+
+- name: Ensure haproxy is started and enabled on boot.
+  service:
+    name: haproxy
+    state: started
+    enabled: enable
+  tags: [haproxy_install]
+
+- name: Flush handlers
+  meta: flush_handlers

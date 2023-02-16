@@ -5,7 +5,6 @@
   vars:
     params:
       files:
-        - "{{ ansible_os_family | lower }}.yml"
         - 'empty.yml'
       paths:
         - 'vars'
@@ -20,20 +19,20 @@
 - include_tasks:
     file: "{{ lookup('first_found', params) }}"
     apply:
-      tags: [install]
+      tags: [install, clickhouse_install, clickhouse]
   vars:
     params:
       files:
         - "install/{{ ansible_pkg_mgr }}.yml"
         - 'empty.yml'
-  tags: [install]
+  tags: [install, clickhouse_install, clickhouse]
   when: not clickhouse_remove|bool
 
 - include_tasks: 
     file: configure/sys.yml
     apply:
-      tags: [config, config_sys]
-  tags: [config, config_sys]
+      tags: [clickhouse_config, config_sys]
+  tags: [clickhouse_config, config_sys]
   when: not clickhouse_remove|bool
 
 - name: "Notify Handlers Now"
@@ -51,15 +50,15 @@
 - include_tasks:
     file: configure/db.yml
     apply:
-      tags: [config, config_db]
-  tags: [config, config_db]
+      tags: [clickhouse_config, config_db]
+  tags: [clickhouse_config, config_db]
   when: not clickhouse_remove|bool
 
 - include_tasks:
     file: configure/dict.yml
     apply:
-      tags: [config, config_dict]
-  tags: [config, config_dict]
+      tags: [clickhouse_config, config_dict]
+  tags: [clickhouse_config, config_dict]
   when: not clickhouse_remove|bool
 
 - include_tasks:

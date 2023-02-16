@@ -5,13 +5,6 @@
     path: "{{ jdk_dir }}"
     state: directory
 
-- name: Download and unarchive jdk from nexus (when var repository_source is 'internal')
-  ansible.builtin.unarchive:
-    src: "{{ jdk_proxy_source }}"
-    dest: "{{ jdk_dir }}"
-    remote_src: yes
-  when: repository_source == 'internal'
-
 - name: Download and unarchive jdk
   ansible.builtin.unarchive:
     src: "{{ jdk_source }}"
@@ -19,6 +12,13 @@
     remote_src: yes
   when: repository_source == 'external'
   register: path_to_java
+
+- name: Download and unarchive jdk from nexus
+  ansible.builtin.unarchive:
+    src: "{{ jdk_proxy_source }}"
+    dest: "{{ jdk_dir }}"
+    remote_src: yes
+  when: repository_source == 'internal'
 
 - name: Install Java
   community.general.alternatives:
