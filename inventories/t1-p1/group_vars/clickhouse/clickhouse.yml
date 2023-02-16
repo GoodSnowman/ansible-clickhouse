@@ -3,9 +3,12 @@ clickhouse_networks_default:
   - 0.0.0.0/0
 
 clickhouse_shards:
-  s1: "{{ groups['clickhouse'] }}"
+  s1: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
+  #"{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_fqdn') }}"
+  #"{{ groups['clickhouse'] }}"
 
-clickhouse_zookeeper_hosts: "{{ groups['clickhouse'] }}"
+clickhouse_zookeeper_hosts: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
+#"{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_fqdn') }}"
 clickhouse_zookeeper_username: clickhouse
 clickhouse_zookeeper_password: "gdsfAVsjcsAKasfgds35te"
 # "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:zk_ch_auth') }}"
@@ -35,7 +38,7 @@ clickhouse_users_custom:
 clickhouse_macros:
   cluster: "dns_saas"
   shard: "s1"
-  replica: "{{ ansible_hostname }}.dns-as-a-service.prod.01.vmw.t1.loc"
+  replica: "{{ ansible_fqdn }}"
   default_replica_path: "/clickhouse/tables/{shard}/{database}/{table}"
   default_replica_name: "{replica}"
 

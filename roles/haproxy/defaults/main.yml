@@ -2,17 +2,17 @@
 # Can be external or internal
 repository_source: external
 
-
 haproxy_proxy_repository: ''
-haproxy_repository: "deb http://ppa.launchpad.net/vbernat/haproxy-2.7/ubuntu focal main"
+haproxy_repository: "deb http://ppa.launchpad.net/vbernat/haproxy-2.7/ubuntu {{ __lsb_release }} main"
+
 haproxy_version: latest
 # global section
-haproxy_global_log: []
-  # - address: /dev/log
-  #   facility: local0
+haproxy_global_log:
+   - address: /dev/log
+     facility: local0
   # - address: /dev/log
   #   facility: local1
-  #   level: notice
+     level: notice
 haproxy_global_stats: []
   # sockets:
   #   - listen: /run/haproxy/admin.sock
@@ -28,7 +28,6 @@ haproxy_global_ssl_default_bind_options: 'no-sslv3'
 haproxy_global_ssl_default_server_ciphers: 'kEECDH+aRSA+AES:kRSA+AES:+AES256:RC4-SHA:!kEDH:!LOW:!EXP:!MD5:!aNULL:!eNULL'
 haproxy_global_ssl_default_server_ciphersuites: ''
 haproxy_global_ssl_default_server_options: 'no-sslv3'
-haproxy_global_nbproc: 1
 haproxy_global_option: []
 
 # defaults section
@@ -56,9 +55,6 @@ haproxy_listen: []
 # front-end section
 haproxy_frontend: []
 
-# back-end section
-haproxy_backend: []
-
 # user-lists section
 haproxy_userlists: []
 
@@ -67,3 +63,6 @@ haproxy_resolvers: []
 
 # ACL files
 haproxy_acl_files: []
+
+# back-end section
+haproxy_backend: []

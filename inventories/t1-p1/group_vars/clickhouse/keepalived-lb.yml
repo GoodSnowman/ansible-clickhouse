@@ -9,7 +9,7 @@ keepalived_lb_track_scripts:
     path: "'/usr/bin/killall -0 haproxy'"   # verify the pid existance
     interval: 2                    # check every 2 seconds
     weight: 2                      # add 2 points of prio if OK
-keepalived_lb_vip: "{{ groups['clickhouse_vip'] | map('extract', hostvars, 'ansible_host') }}"
+
 keepalived_lb_interface_alias: "{{ ansible_default_ipv4.alias }}"
 keepalived_lb_vrrp_instance_name: VRRP_1
 keepalived_lb_virtual_router_id: 50

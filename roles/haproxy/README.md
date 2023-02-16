@@ -47,8 +47,7 @@ Set up (the latest version of) [HAProxy](http://www.haproxy.org/) in Ubuntu syst
 * `haproxy_global_ssl_engines`: [optional, default `[]`]: OpenSSL engine declarations (`>= 1.8.0` only)
 * `haproxy_global_ssl_engines.{n}.name`: [required]: Sets the OpenSSL engine to use (e.g. `rdrand`)
 * `haproxy_global_ssl_engines.{n}.algos`: [optional]: Sets the OpenSSL algorithms to use (e.g. `['RSA']`)
-* `haproxy_global_ssl_mode_async`: [optional: default `false`]: Enables asynchronous TLS I/O operations if asynchronous capable SSL engines are used (`>= 1.8.0` only)
-* `haproxy_global_nbproc`: [default: `1`]: Number of processes to create when going daemon. This requires the `daemon` mode. By default, only one process is created, which is the recommended mode of operation
+* `haproxy_global_ssl_mode_async`: [optional: default `false`]: Enables asynchronous TLS I/O operations if asynchronous capable SSL engines are used (`>= 1.8.0` only) mode. By default, only one process is created, which is the recommended mode of operation
 * `haproxy_global_nbthread`: [optional]: This setting is only available when support for threads was built in. It creates `<number>` threads for each created processes (`>= 1.8.0` only)
 * `haproxy_global_tune`: [default: `[]`]: (Performance) tuning declarations
 * `haproxy_global_tune.{n}.key`: [required]: Setting name (e.g. `ssl.cachesize`)
@@ -595,8 +594,6 @@ None
         - listen: /run/haproxy/admin-4.sock
           param: "{{ haproxy_global_stats_sockets_default_param + ['process 4'] }}"
       timeout: 30s
-
-    haproxy_global_nbproc: 4
 
     haproxy_ssl_map:
       - src: ../../../files/haproxy/etc/haproxy/ssl/star-example0-com.pem

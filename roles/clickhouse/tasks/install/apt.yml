@@ -4,7 +4,7 @@
 
 - name: Add key for clickhouse repository
   ansible.builtin.get_url:
-    url: https://packages.clickhouse.com/deb/dists/stable/Release.gpg
+    url: "{{ clickhouse_repo_key }}"
     dest: /etc/apt/trusted.gpg.d/clickhouse.asc
   tags: [install]
   when: repository_source == 'external'
@@ -14,7 +14,6 @@
   ansible.builtin.apt_key:
     url: "{{ clickhouse_proxy_repo_key }}"
     state: present
-  become: true
   tags: [install]
   when: repository_source == 'internal'
 
@@ -27,7 +26,7 @@
 
 - name: Add repository for clickhouse
   ansible.builtin.apt_repository:
-    repo: "deb  https://packages.clickhouse.com/deb stable main"
+    repo: "{{ clickhouse_repository }}"
     state: present
   tags: [install]
   when: repository_source == 'external'
