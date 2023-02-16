@@ -1,0 +1,17 @@
+Server {
+       org.apache.zookeeper.server.auth.DigestLoginModule required
+{% for client in zookeeper_clients %}
+       user_{{ client.username }}="{{ client.password }}"
+{% endfor %};
+};
+
+QuorumServer {
+       org.apache.zookeeper.server.auth.DigestLoginModule required
+       user_{{ zookeeper_server_username }}="{{ zookeeper_server_password }}";
+};
+
+QuorumLearner {
+       org.apache.zookeeper.server.auth.DigestLoginModule required
+       username="{{ zookeeper_server_username }}"
+       password="{{ zookeeper_server_password }}";
+};

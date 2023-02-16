@@ -1,0 +1,6 @@
+---
+- name: Restart ZooKeeper
+  systemd:
+    name: zookeeper
+    state: restarted
+  listen: Update ZooKeeper

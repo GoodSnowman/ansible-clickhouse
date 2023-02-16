@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Zookeeper Daemon
+Documentation=http://zookeeper.apache.org
+Requires=network.target
+After=network.target
+
+[Service]
+EnvironmentFile={{ zookeeper_conf_dir }}/zookeeper.env
+Type=forking
+WorkingDirectory={{ zookeeper_dir }}/{{ zookeeper_version }}
+User=zookeeper
+Group=zookeeper
+ExecStart={{ zookeeper_dir }}/{{ zookeeper_version }}/bin/zkServer.sh start {{ zookeeper_conf_dir }}/zookeeper.cfg
+ExecStop={{ zookeeper_dir }}/{{ zookeeper_version }}/bin/zkServer.sh stop {{ zookeeper_conf_dir }}/zookeeper.cfg
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target

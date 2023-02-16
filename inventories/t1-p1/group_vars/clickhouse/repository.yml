@@ -1,0 +1,24 @@
+---
+repository_source: external
+
+# Default internal repository for deb packages
+apt_proxy_repository: "https://nexus.t1.cloud/repository/repository/apt-proxy/"
+
+# Zookeeper
+zookeeper_source: "https://dlcdn.apache.org/zookeeper/zookeeper-{{ zookeeper_version }}/apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz"
+zookeeper_proxy_source: "https://nexus.t1.cloud/repository/repository/zookeeper/zookeeper-{{ zookeeper_version }}/apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz"
+
+# Java
+jdk_source: "https://download.oracle.com/java/{{ java_version }}/latest/jdk-{{ java_version }}_linux-x64_bin.tar.gz"
+jdk_proxy_source: "https://nexus.t1.cloud/repository/openjdk/jdk19/jdk-19_linux-x64_bin.tar.gz"
+
+# Haproxy
+haproxy_repository: "deb http://ppa.launchpad.net/vbernat/haproxy-2.7/ubuntu focal main"
+haproxy_proxy_repository: "https://nexus.t1.cloud/repository/apt-haproxy2_7/"
+
+# Clickhouse
+clickhouse_proxy_repository: "deb https://nexus.t1.cloud/repository/apt-clickhouse/ stable main"
+clickhouse_proxy_repo_key: "https://nexus.t1.cloud/repository/gpg-keys/clickhouse/gpg"
+clickhouse_repository: "deb https://packages.clickhouse.com/deb/stable/ main"
+clickhouse_repo_keyserver: "hkp://keyserver.ubuntu.com:80"
+clickhouse_repo_key: "8919F6BD2B48D754"

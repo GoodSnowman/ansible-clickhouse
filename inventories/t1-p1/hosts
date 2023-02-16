@@ -1,0 +1,8 @@
+[clickhouse_vip]
+dc1-v-clickhouse-vip.dns-as-a-service.prod.01.vmw.t1.loc ansible_host=10.13.248.50
+
+[clickhouse]
+dc1-v-clickhouse001.dns-as-a-service.prod.01.vmw.t1.loc ansible_host=10.13.248.51
+dc1-v-clickhouse002.dns-as-a-service.prod.01.vmw.t1.loc ansible_host=10.13.248.52
+dc1-v-clickhouse003.dns-as-a-service.prod.01.vmw.t1.loc ansible_host=10.13.248.53
+

@@ -1,0 +1,56 @@
+---
+#Main installation actions
+#https://clickhouse.yandex/docs/en/getting_started/index.html#installation
+
+- name: Add key for clickhouse repository
+  ansible.builtin.get_url:
+    url: https://packages.clickhouse.com/deb/dists/stable/Release.gpg
+    dest: /etc/apt/trusted.gpg.d/clickhouse.asc
+  tags: [install]
+  when: repository_source == 'external'
+
+
+- name: Add key for clickhouse repository from nexus(when var repository_source is 'internal')
+  ansible.builtin.apt_key:
+    url: "{{ clickhouse_proxy_repo_key }}"
+    state: present
+  become: true
+  tags: [install]
+  when: repository_source == 'internal'
+
+- name: Install by APT | Remove old repo
+  ansible.builtin.apt_repository:
+    repo: "{{ clickhouse_repo_old }}"
+    state: absent
+  when: clickhouse_repo_old is defined
+  tags: [install]
+
+- name: Add repository for clickhouse
+  ansible.builtin.apt_repository:
+    repo: "deb  https://packages.clickhouse.com/deb stable main"
+    state: present
+  tags: [install]
+  when: repository_source == 'external'
+
+- name: Add repository for clickhouse from nexus(when var repository_source is 'internal')
+  ansible.builtin.apt_repository:
+    repo: "{{ clickhouse_proxy_repository }}"
+    state: present
+  tags: [install]
+  when: repository_source == 'internal'
+
+- name: Install by APT(!=latest) | Package installation 
+  apt:
+    name: "{{ clickhouse_package | map('regex_replace', '$', '=' + clickhouse_version) | list }}"
+    state: present
+    update_cache: true
+  when: clickhouse_version != 'latest'
+  tags: [install]
+
+- name: Install by APT(latest) | Package installation
+  apt:
+    name: "{{ clickhouse_package }}"
+    state: "{{ clickhouse_version }}"
+    update_cache: true
+  when: clickhouse_version == 'latest'
+  tags: [install]

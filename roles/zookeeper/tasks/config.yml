@@ -1,0 +1,93 @@
+---
+
+- name: Convert ZooKeeper members to dict
+  set_fact:
+    zookeeper_member_dict: "{{ zookeeper_member_dict | default([]) + [{'key': index + 1, 'value': item}] }}"
+  with_items:
+    - "{{ zookeeper_members }}"
+  loop_control:
+    index_var: index
+  run_once: true
+
+- name: Set ZooKeeper member index
+  set_fact:
+    zookeeper_member_index: "{{ zookeeper_member_dict | selectattr('value', 'equalto', zookeeper_member_id) | map(attribute='key') | first }}"
+
+- name: Create ZooKeeper config dir
+  file:
+    path: "{{ zookeeper_conf_dir }}"
+    state: directory
+    mode: '0755'
+    owner: zookeeper
+    group: zookeeper
+
+- name: Create ZooKeeper config file
+  template:
+    src: zookeeper.cfg.j2
+    dest: "{{ zookeeper_conf_dir }}/zookeeper.cfg"
+    mode: '0644'
+    owner: zookeeper
+    group: zookeeper
+  notify: Restart ZooKeeper
+
+- name: Create ZooKeeper dynamic config file
+  template:
+    src: zookeeper.dynamic.cfg.j2
+    dest: "{{ zookeeper_conf_dir }}/zookeeper.dynamic.cfg"
+    mode: '0644'
+    owner: zookeeper
+    group: zookeeper
+
+- name: Create JAAS config file
+  template:
+    src: jaas.cfg.j2
+    dest: "{{ zookeeper_conf_dir }}/jaas.cfg"
+    mode: '0600'
+    owner: zookeeper
+    group: zookeeper
+  notify: Restart ZooKeeper
+
+- name: Create myid file
+  copy:
+    dest: "{{ zookeeper_data_dir }}/myid"
+    content: "{{ zookeeper_member_index }}"
+    mode: '0644'
+    owner: zookeeper
+    group: zookeeper
+  notify: Restart ZooKeeper
+
+- name: Create env file
+  template:
+    src: zookeeper.env.j2
+    dest: "{{ zookeeper_conf_dir }}/zookeeper.env"
+    mode: '0644'
+    owner: zookeeper
+    group: zookeeper
+  notify: Restart ZooKeeper
+
+- name: Create JMX password file
+  template:
+    src: jmxremote.password.j2
+    dest: "{{ zookeeper_conf_dir }}/jmxremote.password"
+    mode: '0600'
+    owner: zookeeper
+    group: zookeeper
+  notify: Restart ZooKeeper
+
+- name: Create JMX access file
+  template:
+    src: jmxremote.access.j2
+    dest: "{{ zookeeper_conf_dir }}/jmxremote.access"
+    mode: '0600'
+    owner: zookeeper
+    group: zookeeper
+  notify: Restart ZooKeeper
+
+- name: Ensure ZooKeeper is started and enabled on boot.
+  service:
+    name: zookeeper
+    state: started
+    enabled: true
+
+- name: Flush handlers
+  meta: flush_handlers

@@ -1,0 +1,2 @@
+keepalived_lb_node_master: true 
+keepalived_lb_priority: 101
