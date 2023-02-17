@@ -8,7 +8,7 @@ haproxy_global_raw_options:
 haproxy_frontend:
   - name: clickhouse
     bind:
-      - listen: "*:9010"
+      - listen: "*:{{ ch_frontend_port }}"
     mode: tcp
     default_backend: clickhouse-servers
 
