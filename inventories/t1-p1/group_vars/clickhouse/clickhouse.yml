@@ -15,7 +15,7 @@ clickhouse_zookeeper_password: "gdsfAVsjcsAKasfgds35te"
 
 clickhouse_dbs_custom:
   - name: monitoring
-
+  - name: pdns
 
 clickhouse_users_default:
   - {name: "default", password: "ePhahc7eF1iG2paeXei4", networks: "{{ clickhouse_networks_default }}", profile: "default", quota: "default", comment: "Default user for login if user not defined"}
@@ -31,6 +31,15 @@ clickhouse_users_custom:
 #    "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:ch_grafana_usr_pass') }}"
     dbs:
       - monitoring
+    networks: '{{ clickhouse_networks_default }}'
+    profile: default
+    quota: default
+
+  - name: "pdns_ch_usr"
+    password: "phisheisoo3Peehahg6a"
+#    "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:ch_grafana_usr_pass') }}"
+    dbs:
+      - pdns
     networks: '{{ clickhouse_networks_default }}'
     profile: default
     quota: default

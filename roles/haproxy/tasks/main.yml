@@ -50,7 +50,7 @@
   service:
     name: haproxy
     state: started
-    enabled: enable
+    enabled: true
   tags: [haproxy_install]
 
 - name: Flush handlers

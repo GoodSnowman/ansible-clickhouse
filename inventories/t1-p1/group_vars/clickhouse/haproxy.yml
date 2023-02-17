@@ -8,7 +8,7 @@ haproxy_global_raw_options:
 haproxy_frontend:
   - name: clickhouse
     bind:
-      - listen: "{{ keepalived_lb_vip }}:9000"
+      - listen: "*:9010"
     mode: tcp
     default_backend: clickhouse-servers
 
@@ -16,10 +16,8 @@ haproxy_listen:
   - name: stats
     description: Global statistics
     bind:
-      - listen: "{{ ansible_default_ipv4.address }}:8404"
+      - listen: "*:8404"
     mode: http 
-    option:
-      - http-use-htx
     stats:
       enable: true
       refresh: 10s 

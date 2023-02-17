@@ -1,5 +1,6 @@
 ---
 # tasks file for clickhouse
+
 - name: 'Include OS Family Specific Variables'
   include_vars: "{{ lookup('first_found', params) }}"
   vars:
@@ -67,3 +68,4 @@
       tags: [remove]
   tags: [remove]
   when: clickhouse_remove|bool
+

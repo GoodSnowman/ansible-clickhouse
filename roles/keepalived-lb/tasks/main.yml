@@ -1,4 +1,8 @@
 ---
+# in future
+# - name: Enable ipv4 forvarding
+#   ansible.builtin.shell: sysctl -w net.ipv4.ip_forward=1
+
 - name: Add repository from nexus(when var repository_source is 'internal')
   apt_repository:
     repo: "{{ apt_proxy_repository }}"
