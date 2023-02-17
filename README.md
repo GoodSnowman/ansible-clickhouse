@@ -38,7 +38,7 @@ ansible-playbook -i inventories/t1-p1/hosts clickhouse_infra.yml -vv -D # Под
 
 Групповые переменные определены в следующих файлах:
 
-- [all.yml](https://git.service.t1-cloud.ru/sre/infra/clickhouse/dns-as-a-service/-/blob/main/inventories/t1-p1/group_vars/all.yml). # Определена переменная VIP для единой точки входа.
+- [all.yml](https://git.service.t1-cloud.ru/sre/infra/clickhouse/dns-as-a-service/-/blob/main/inventories/t1-p1/group_vars/all.yml).
 - [clickhouse/zookeeper.yml](https://git.service.t1-cloud.ru/sre/infra/clickhouse/dns-as-a-service/-/blob/main/inventories/t1-p1/group_vars/clickhouse/zookeeper.yml).
 - [clickhouse/clickhouse.yml](https://git.service.t1-cloud.ru/sre/infra/clickhouse/dns-as-a-service/-/blob/main/inventories/t1-p1/group_vars/clickhouse/clickhouse.yml).
 - [clickhouse/haproxy.yml](https://git.service.t1-cloud.ru/sre/infra/clickhouse/dns-as-a-service/-/blob/main/inventories/t1-p1/group_vars/clickhouse/haproxy.yml).
