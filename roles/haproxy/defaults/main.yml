@@ -4,7 +4,7 @@ repository_source: external
 
 haproxy_proxy_repository: ''
 haproxy_repository: "deb http://ppa.launchpad.net/vbernat/haproxy-2.7/ubuntu {{ __lsb_release }} main"
-
+ch_frontend_port: 9010
 haproxy_version: latest
 # global section
 haproxy_global_log:

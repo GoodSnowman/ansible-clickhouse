@@ -8,7 +8,7 @@ haproxy_global_raw_options:
 haproxy_frontend:
   - name: clickhouse
     bind:
-      - listen: "*:{{ ch_frontend_port }}"
+      - listen: "0.0.0.0:{{ ch_frontend_port }}"
     mode: tcp
     default_backend: clickhouse-servers
 
@@ -16,7 +16,7 @@ haproxy_listen:
   - name: stats
     description: Global statistics
     bind:
-      - listen: "*:8404"
+      - listen: 0.0.0.0:8404
     mode: http 
     stats:
       enable: true

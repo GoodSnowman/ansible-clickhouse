@@ -42,7 +42,7 @@
   apt:
     name: "{{ clickhouse_package | map('regex_replace', '$', '=' + clickhouse_version) | list }}"
     state: present
-    update_cache: true
+#    update_cache: true
   when: clickhouse_version != 'latest'
   tags: [install]
 

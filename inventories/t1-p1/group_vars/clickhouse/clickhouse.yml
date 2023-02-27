@@ -3,7 +3,7 @@ clickhouse_networks_default:
   - 0.0.0.0/0
 
 clickhouse_shards:
-  s1: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
+  dns_saas: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
   #"{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_fqdn') }}"
   #"{{ groups['clickhouse'] }}"
 
@@ -47,7 +47,8 @@ clickhouse_users_custom:
 clickhouse_macros:
   cluster: "dns_saas"
   shard: "s1"
-  replica: "{{ ansible_fqdn }}"
+  replica: "{{ ansible_default_ipv4.address }}"
+#  replica: "{{ ansible_hostname }}.dns-as-a-service.prod.01.vmw.t1.loc"
   default_replica_path: "/clickhouse/tables/{shard}/{database}/{table}"
   default_replica_name: "{replica}"
 
