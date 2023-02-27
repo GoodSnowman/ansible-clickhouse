@@ -3,7 +3,7 @@
 repository_source: internal
 __lsb_release: focal
 # Default internal repository for deb packages
-apt_proxy_repository: "https://nexus.t1.cloud/repository/repository/apt-proxy/"
+apt_proxy_repository: "deb http://nexus.service.prod.01.vmw.t1.loc/repository/apt-proxy/ focal main"
 
 # Zookeeper
 zookeeper_source: "https://dlcdn.apache.org/zookeeper/zookeeper-{{ zookeeper_version }}/apache-zookeeper-{{ zookeeper_version }}-bin.tar.gz"
@@ -16,8 +16,8 @@ jdk_proxy_source: "https://nexus.t1.cloud/repository/openjdk/jdk{{ java_version 
 # Haproxy
 haproxy_repository: "deb http://ppa.launchpad.net/vbernat/haproxy-2.7/ubuntu {{ __lsb_release }} main"
 haproxy_repo_key: "http://ppa.launchpad.net/vbernat/haproxy-2.7/ubuntu/dists/{{ __lsb_release }}/Release.gpg"
-haproxy_proxy_repository: "deb https://nexus.t1.cloud/repository/apt-haproxy2_7/ {{ __lsb_release }} main"
-haproxy_proxy_repo_key: "https://nexus.t1.cloud/repository/apt-haproxy2_7/dists/{{ __lsb_release }}/Release.gpg"
+haproxy_proxy_repository: "deb http://nexus.service.prod.01.vmw.t1.loc/repository/apt-haproxy2_7/ {{ __lsb_release }} main"
+haproxy_proxy_repo_key: "http://nexus.service.prod.01.vmw.t1.loc/repository/apt-haproxy2_7/dists/{{ __lsb_release }}/Release.gpg"
 haproxy_repo_key_id: "505D97A41C61B9CD"
 haproxy_keyserver:  hkp://keyserver.ubuntu.com:80
 # Clickhouse
