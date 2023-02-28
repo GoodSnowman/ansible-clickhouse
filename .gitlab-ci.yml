@@ -22,7 +22,7 @@ stages:
   - export VAULT_ADDR=${VAULT_ADDR}
   - export VAULT_TOKEN=${VAULT_TOKEN}
   - vault status
-
+  - pip3 install hvac
 
 .ssh: &ssh
   - mkdir -p ~/.ssh
@@ -35,6 +35,7 @@ stages:
 #  - ssh-keyscan 10.13.248.51 10.13.248.52 10.13.248.53
 
 before_script:
+  - ansible -m debug -a 'var=ansible_playbook_python' localhost
   - *ssh
   - date
   - *vault
