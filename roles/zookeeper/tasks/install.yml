@@ -71,7 +71,7 @@
     remote_src: yes
     extra_opts: [--strip-components=1]
   when: 
-#    - zookeeper_version_dir.changed
+    - zookeeper_version_dir.changed
     - repository_source == 'internal'
 
 - name: Create ZooKeeper data dir

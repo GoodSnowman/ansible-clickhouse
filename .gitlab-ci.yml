@@ -2,7 +2,7 @@ variables:
   AIND: git-registry.service.t1-cloud.ru/sre/docker/ansible:${ANSIBLE_TAG}
   ANSIBLE_TAG: 2.10.7
   ANSIBLE_FORCE_COLOR: 'true'
-
+  ENV: 't1-p1'
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -30,7 +30,7 @@ check_all_roles:
   image: ${AIND}
   stage: check_mode
   script:
-    - ansible-playbook -i inventories/t1-p1/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --check -vv --diff
+    - ansible-playbook -i inventories/t1-p1/hosts clickhouse_infra.yml -u ${SSH_LOGIN} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
   allow_failure: true
 
 ################ Deploy HA Clickhouse cluster ####################
@@ -38,7 +38,7 @@ check_all_roles:
 .deploy:
   image: ${AIND}
   script:
-    - ansible-playbook -i inventories/"{$ENV}"/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} --diff
+    - ansible-playbook -i inventories/"{$ENV}"/hosts clickhouse_infra.yml -u ${SSH_LOGIN} -e "VAULT_TOKEN=${VAULT_TOKEN}" --tags=${ROLE_TAGS} --diff
   allow_failure: false
 
 zookeeper_install:

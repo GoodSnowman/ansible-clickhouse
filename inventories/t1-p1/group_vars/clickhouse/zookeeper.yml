@@ -1,15 +1,12 @@
 ---
 zookeeper_members: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
 zookeeper_server_username: zookeeper_usr
-zookeeper_server_password: OvssQbvx8f3escoGas9cjvbrre
-#zookeeper_server_password: "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:zookeeper_usr_pass') }}"
+zookeeper_server_password: "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:zookeeper_usr_pass') }}"
 
 zookeeper_clients:
   - username: clickhouse
-    password: gdsfAVsjcsAKasfgds35te    
-
-# "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:zk_clickhouse_usr_auth') }}"
+    password: "{{ lookup('hashi_vault', deployment/data/prod/dns-as-a-service:zk_clickhouse_usr_auth') }}" 
 
 zookeeper_jmx_username: monitoring
-zookeeper_jmx_password: eiDeipogai5hei9shae0
-# zookeeper_jmx_password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zk_monitoring_usr_pass') }}"
+zookeeper_jmx_password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zk_monitoring_usr_pass') }}"
+

@@ -16,45 +16,12 @@
 #   tags: [haproxy_install]
 #   when: repository_source == 'internal'
 
-- name: Add ppa:vbernat/haproxy-1.8 repository apt-key
-  apt_key:  # https://github.com/ansible/ansible/issues/31691
-    data: |
-      -----BEGIN PGP PUBLIC KEY BLOCK-----
-
-      xo0EUa70wAEEAMtI29s01PCX0JleVmh1QQr3rfPkfGo/GFKfcXRGE40nQHq+rWUh
-      9slUN+kXBckSE0DDrnQH08Uvf12TJiHHFlbXnH5Ep+hgYPZGlVSpvBGO+c/CopU7
-      RHMx9bl+pVOhrVeDWqLl2KqJI2wjJBLXA0dbRbCzmXPvrg3mBQ0hZ533ABEBAAHN
-      IExhdW5jaHBhZCBQUEEgZm9yIFZpbmNlbnQgQmVybmF0wrgEEwECACIFAlGu9MAC
-      GwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEFBdl6QcYbnN8aMD/RM3InMu
-      bxTF9hzToCPF2EP37Q9WUQNF15f90jTOl8VqqpnUfGd2qlxUW31soCpDVxqX6lXf
-      qB0bI9EDz2r7w+goxBH+cRArJ2APdC7wE/U9eIxY49mzNsqjsl7zY+eoX4v4fjqk
-      33hFyMMJDUtPxSRHWFqP5QNwCN+fbPh5GiyL
-      =ZiOf
-      -----END PGP PUBLIC KEY BLOCK-----
-    state: present
+- name: Add key for haproxy from nexus repository
+  ansible.builtin.get_url:
+    url: "{{ haproxy_proxy_repo_key }}"
+    dest: /etc/apt/trusted.gpg.d/haproxy.asc
+  tags: [haproxy_install]
   when: repository_source == 'internal'
-
-# - name: Add key for haproxy from nexus repository
-#   apt_key:  # https://github.com/ansible/ansible/issues/31691
-#     data: |
-#       -----BEGIN PGP SIGNATURE-----
-
-#       iLMEAAEKAB0WIQTP+3earcmV5PNQoGBQXZekHGG5zQUCY+yX5QAKCRBQXZekHGG5
-#       zWEnA/0azjKFSuJKxkkv7LOmynMXJKzKNUIGLIfFtMSb7gA8MAk0q9zqDafvM0ER
-#       qQXrGqEzQYje7pTTAlsZLFR/KCVDLsyFYjUQlfLgd58p/Hh1Z7MCE5kRrV/tfF8n
-#       qqYyqiFT6ylfFuYe0+dbz2DgguRf50N2AJzhzg39o6ptE7LsPw==
-#       =atUU
-#       -----END PGP SIGNATURE-----
-#     state: present
-#   # tags: [haproxy_install]
-#   when: repository_source == 'internal'
-
-# - name: Add key for haproxy from nexus repository
-#   ansible.builtin.get_url:
-#     url: "{{ haproxy_proxy_repo_key }}"
-#     dest: /etc/apt/trusted.gpg.d/haproxy.asc
-#   tags: [haproxy_install]
-#   when: repository_source == 'internal'
 
 - name: Add source repository into sources list
   ansible.builtin.apt_repository:
