@@ -25,6 +25,7 @@ stages:
 
 
 .ssh: &ssh
+  - eval $(ssh-agent -s)
   - chmod 400 "$SRE_ADMIN_KEY"
   - ssh-add "$SRE_ADMIN_KEY"
   - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
