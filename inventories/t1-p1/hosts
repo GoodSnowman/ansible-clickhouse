@@ -7,5 +7,4 @@ dc1-v-clickhouse002.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.52
 dc1-v-clickhouse003.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.53
 
 [all]
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 host_key_checking = False
