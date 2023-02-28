@@ -25,16 +25,16 @@ stages:
 
 
 .ssh: &ssh
-  - eval $(ssh-agent -s)
-  - touch id_rsa && chmod 600 id_rsa
-  - echo "${SRE_ADMIN_KEY}" > id_rsa
-  - ssh-add id_rsa  > /dev/null
-  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-
+  - chmod 400 "$SSH_PRIVATE_KEY"
+  - ssh-add "$SSH_PRIVATE_KEY"
+  - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+#  - ssh-keyscan 10.13.248.51 10.13.248.52 10.13.248.53
 
 before_script:
   - *ssh
   - date
+  - *vault
 
 check_all_roles:
   image: ${AIND}
