@@ -28,6 +28,7 @@ stages:
   - eval $(ssh-agent -s)
   - chmod 400 "$SRE_ADMIN_KEY"
   - ssh-add "$SRE_ADMIN_KEY" > /dev/null
+  - mkdir ~/.ssh/known_hosts
   - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 #  - ssh-keyscan 10.13.248.51 10.13.248.52 10.13.248.53
