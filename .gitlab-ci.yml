@@ -1,6 +1,6 @@
 variables: 
   AIND: git-registry.service.t1-cloud.ru/sre/docker/ansible:${ANSIBLE_TAG}
-  ANSIBLE_TAG: 2.10.7
+  ANSIBLE_TAG: latest
   ANSIBLE_FORCE_COLOR: 'true'
   DEPLOY_ENV: 't1-p1'
 
