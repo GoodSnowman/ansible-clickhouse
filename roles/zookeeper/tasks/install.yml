@@ -25,7 +25,6 @@
     name: java
     path: "{{ jdk_dir }}/jdk-{{ java_minior_version }}/bin/java"
     link: /usr/bin/java
-    state: present
 
 - name: Add ZooKeeper group
   group:
