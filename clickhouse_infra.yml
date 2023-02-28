@@ -8,5 +8,4 @@
    - haproxy
    - keepalived-lb
   vars:
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     ansible_user: sre-admin
