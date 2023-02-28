@@ -30,7 +30,7 @@ check_all_roles:
   image: ${AIND}
   stage: check_mode
   script:
-    - ansible-playbook -i inventories/t1-p1/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --check -vv --diff
+    - ansible-playbook -i inventories/t1-p1/hosts clickhouse_infra.yml --check -vv --diff
   allow_failure: true
 
 ################ Deploy HA Clickhouse cluster ####################
