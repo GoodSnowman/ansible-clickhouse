@@ -3,11 +3,13 @@ variables:
   ANSIBLE_TAG: 2.10.7
   ANSIBLE_FORCE_COLOR: 'true'
   DEPLOY_ENV: 't1-p1'
+
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
     - if: $CI_COMMIT_TAG
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
 stages:
 #  - ansible_lint
   - check_mode
@@ -16,11 +18,23 @@ stages:
   - haproxy_lb
 #  - debug,check_replication,check_vars,check_status
 
+.vault: &vault
+  - export VAULT_ADDR=${VAULT_ADDR}
+  - export VAULT_TOKEN=${VAULT_TOKEN}
+  - vault status
+
+
+# .ssh: &ssh
+#   - eval $(ssh-agent -s)
+#   - touch id_rsa && chmod 600 id_rsa
+#   - echo "${SRE_ADMIN_KEY}" > id_rsa
+#   - ssh-add id_rsa  > /dev/null
+
 .ssh: &ssh
-  - eval $(ssh-agent -s)
-  - touch id_rsa && chmod 600 id_rsa
-  - echo "${SRE_ADMIN_KEY}" > id_rsa
-  - ssh-add id_rsa  > /dev/null
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - echo -e "[all:vars]\nansible_user=${SSH_USER}\nansible_ssh_pass=$(vault kv get -field=${SSH_USER} deployment/prod/dns-as-a-service)\nansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> ${HOSTS}
+
 
 before_script:
   - *ssh
