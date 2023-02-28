@@ -24,16 +24,12 @@ stages:
   - vault status
 
 
-# .ssh: &ssh
-#   - eval $(ssh-agent -s)
-#   - touch id_rsa && chmod 600 id_rsa
-#   - echo "${SRE_ADMIN_KEY}" > id_rsa
-#   - ssh-add id_rsa  > /dev/null
-
 .ssh: &ssh
-  - mkdir -p ~/.ssh
+  - eval $(ssh-agent -s)
+  - touch id_rsa && chmod 600 id_rsa
+  - echo "${SRE_ADMIN_KEY}" > id_rsa
+  - ssh-add id_rsa  > /dev/null
   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-  - echo -e "[all:vars]\nansible_user=${SSH_USER}\nansible_ssh_pass=$(vault kv get -field=${SSH_USER} deployment/prod/dns-as-a-service)\nansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> ${HOSTS}
 
 
 before_script:
