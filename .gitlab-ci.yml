@@ -29,7 +29,7 @@ stages:
   - chmod 700 ~/.ssh
   - eval $(ssh-agent -s)
   - chmod 400 "$SRE_ADMIN_KEY"
-  - ssh-add "$SRE_ADMIN_KEY" > /dev/null
+  - ssh-add "$SRE_ADMIN_KEY"
   - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 #  - ssh-keyscan 10.13.248.51 10.13.248.52 10.13.248.53
@@ -43,7 +43,7 @@ check_all_roles:
   image: ${AIND}
   stage: check_mode
   script:
-    - ansible-playbook -i inventories/t1-p1/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --check -vvvvv --diff
+    - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --check -vv --diff
   allow_failure: true
 
 ################ Deploy HA Clickhouse cluster ####################
