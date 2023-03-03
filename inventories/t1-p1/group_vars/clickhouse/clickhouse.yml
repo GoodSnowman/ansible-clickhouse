@@ -7,7 +7,7 @@ clickhouse_shards:
 
 clickhouse_zookeeper_hosts: "{{ groups['clickhouse'] }}"
 clickhouse_zookeeper_username: clickhouse
-clickhouse_zookeeper_password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zk_ch_auth token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
+clickhouse_zookeeper_password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zk_clickhouse_usr_auth token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
 
 clickhouse_dbs_custom:
   - name: monitoring
