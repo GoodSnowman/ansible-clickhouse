@@ -4,6 +4,6 @@
   become: true
   roles:
    - zookeeper
-  #  - clickhouse
-  #  - haproxy
-  #  - keepalived-lb
+   - clickhouse
+   - haproxy
+   - keepalived-lb
