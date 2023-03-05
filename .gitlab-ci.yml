@@ -15,7 +15,8 @@ stages:
   - check_mode
   - zookeeper
   - clickhouse
-  - haproxy_lb
+  - haproxy
+  - keepalived
 #  - debug,check_replication,check_vars,check_status
 
 .vault: &vault
