@@ -41,7 +41,7 @@
   ansible.builtin.apt:
     name: "{{ haproxy_packet_name }}={{ haproxy_version }}"
     state: present
-#    update_cache: true
+    update_cache: true
   tags: [haproxy_install]
 
 - name: Setting haproxy config
@@ -49,7 +49,7 @@
     src: etc/haproxy/haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
     validate: "haproxy -f %s -c"
-  tags: [haproxy_install]
+  tags: [haproxy_config]
   notify:
     - reload haproxy
 
@@ -58,7 +58,7 @@
     name: haproxy
     state: started
     enabled: true
-  tags: [haproxy_install]
+  tags: [haproxy_config]
 
 - name: Flush handlers
   meta: flush_handlers

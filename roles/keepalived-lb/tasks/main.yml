@@ -8,12 +8,14 @@
     repo: "{{ apt_proxy_repository }}"
     state: present
   when: repository_source == 'internal'
+  tags: [keepalived_install]
 
 - name: Ensure keepalived package is installed
   ansible.builtin.apt:
     name: "keepalived=1:{{ keepalived_lb_version }}"
     state: present
     update_cache: true
+  tags: [keepalived_install]
   notify:
     - restart keepalived
   when:
@@ -25,6 +27,7 @@
     name: "keepalived={{ keepalived_lb_version }}"
     state: present
     update_cache: true
+  tags: [keepalived_install]
   notify:
     - restart keepalived
   when:
@@ -40,11 +43,13 @@
     mode: 0755
   when:
     - keepalived_lb_enable_nat_switch | bool
+  tags: [keepalived_config]
 
 - name: Ensure keepalived haproxy-service-check script is removed
   file:
     path: /usr/local/bin/haproxy-service-check.sh
     state: absent
+  tags: [keepalived_config]
 
 - name: Ensure keepalived nat_switch script is templated
   template:
@@ -53,6 +58,7 @@
     mode: "a+x"
   when:
     - keepalived_lb_enable_nat_switch | bool
+  tags: [keepalived_config]
 
 - name: Ensure keepalived nat_switch script is removed
   file:
@@ -60,6 +66,7 @@
     state: absent
   when:
     - not keepalived_lb_enable_nat_switch
+  tags: [keepalived_config]
 
 - name: Ensure keepalived main config is templated
   template:
@@ -70,6 +77,7 @@
     mode: "0644"
   notify:
     - "{{ keepalived_systemd_notify }} keepalived"
+  tags: [keepalived_config]
 
 - name: Ensure keepalived is enabled
   systemd:
@@ -79,3 +87,4 @@
     state: started
   when:
     - not ansible_check_mode
+  tags: [keepalived_config]

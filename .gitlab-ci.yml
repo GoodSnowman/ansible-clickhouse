@@ -22,16 +22,17 @@ stages:
   - export VAULT_ADDR=${VAULT_ADDR}
   - export VAULT_TOKEN=${VAULT_TOKEN}
   - vault status
-  - pip3 install hvac
 
 .ssh: &ssh
   - mkdir -p ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
   - chmod 700 ~/.ssh
   - eval $(ssh-agent -s)
   - chmod 400 "$SRE_ADMIN_KEY"
   - ssh-add "$SRE_ADMIN_KEY"
-  - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
+#  - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+
 #  - ssh-keyscan 10.13.248.51 10.13.248.52 10.13.248.53
 
 before_script:
@@ -55,29 +56,29 @@ check_all_roles:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
   allow_failure: false
 
-zookeeper_install:
+zookeeper:
   extends: .deploy
   stage: zookeeper
   variables:
-    ROLE_TAGS: zookeeper_install
+    ROLE_TAGS: zookeeper_install,zookeeper_config
 
-zookeeper_config:
-  extends: .deploy
-  stage: zookeeper
-  variables:
-    ROLE_TAGS: zookeeper_config
-
-clickhouse_install:
+clickhouse:
   extends: .deploy
   stage: clickhouse
   variables:
-    ROLE_TAGS: clickhouse_install
+    ROLE_TAGS: clickhouse_install,clickhouse_config
 
-clickhouse_config:
+haproxy:
   extends: .deploy
-  stage: clickhouse
+  stage: haproxy
   variables:
-    ROLE_TAGS: clickhouse_config
+    ROLE_TAGS: haproxy_install,haproxy_config
+
+keepalived:
+  extends: .deploy
+  stage: keepalived
+  variables:
+    ROLE_TAGS: keepalived_install,keepalived_config
 
 clickhouse_remove:
   extends: .deploy
@@ -87,15 +88,3 @@ clickhouse_remove:
   only:
     variables:
     - $clickhouse_remove == "true"
-  
-haproxy_install:
-  extends: .deploy
-  stage: haproxy_lb
-  variables:
-    ROLE_TAGS: haproxy_install
-
-keepalived_install:
-  extends: .deploy
-  stage: haproxy_lb
-  variables:
-    ROLE_TAGS: keepalived_install
