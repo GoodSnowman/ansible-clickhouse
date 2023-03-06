@@ -49,7 +49,7 @@ before_script:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
   allow_failure: true
   when: manual
-  
+
 default config:
   extends: .check_roles
 
@@ -57,37 +57,37 @@ check zk config:
   extends: .check_roles
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
-  rules:
-    - changes:
-        - roles/zookeeper/*
-        - inventories/t1-p1/group_vars/clickhouse/zookeeper.yml
+  # rules:
+  #   - changes:
+  #       - roles/zookeeper/*
+  #       - inventories/t1-p1/group_vars/clickhouse/zookeeper.yml
 
 check ch config:
   extends: .check_roles
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
-  rules:
-    - changes:
-        - roles/clickhouse/*
-        - inventories/t1-p1/group_vars/clickhouse/clickhouse.yml
+  # rules:
+  #   - changes:
+  #       - roles/clickhouse/*
+  #       - inventories/t1-p1/group_vars/clickhouse/clickhouse.yml
 
 check haproxy config:
   extends: .check_roles
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
-  rules:
-    - changes:
-        - roles/haproxy/*
-        - inventories/t1-p1/group_vars/clickhouse/haproxy.yml
+  # rules:
+  #   - changes:
+  #       - roles/haproxy/*
+  #       - inventories/t1-p1/group_vars/clickhouse/haproxy.yml
 
 check keepalived config:
   extends: .check_roles
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config
-  rules:
-    - changes:
-        - roles/keepalived/*
-        - inventories/t1-p1/group_vars/clickhouse/keepalived.yml
+  # rules:
+  #   - changes:
+  #       - roles/keepalived/*
+  #       - inventories/t1-p1/group_vars/clickhouse/keepalived.yml
 
 
 ################ Deploy HA Clickhouse cluster ####################
