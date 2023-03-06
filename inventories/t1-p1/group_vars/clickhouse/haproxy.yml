@@ -13,7 +13,7 @@ haproxy_frontend:
     default_backend: clickhouse-tcp
   - name: clickhouse_http
     bind:
-      - listen: "{{ keepalived_lb_vip }}:{{ ch_frontend_http_port }}"
+      - listen: "{{ keepalived_lb_vip }}:{{ clickhouse_http_port }}"
     mode: http
     default_backend: clickhouse-http
 
@@ -31,6 +31,8 @@ haproxy_backend:
   - name: clickhouse-tcp
     mode: tcp
     balance: roundrobin
+    option:
+      - tcplog
     server:
       - name: dc1-v-clickhouse001
         listen: 10.13.248.51:9000
@@ -49,18 +51,20 @@ haproxy_backend:
   - name: clickhouse-http
     mode: http
     balance: roundrobin
+    option:
+      - forwardfor
     server:
       - name: dc1-v-clickhouse001
-        listen: 10.13.248.51:8123
+        listen: "10.13.248.51:{{ clickhouse_http_port }}"
         param:
           - check
       - name: dc1-v-clickhouse002
-        listen: 10.13.248.52:8123
+        listen: "10.13.248.52:{{ clickhouse_http_port }"
         param:
           - check
           - backup
       - name: dc1-v-clickhouse003
-        listen: 10.13.248.53:8123
+        listen: "10.13.248.53:{{ clickhouse_http_port }}"
         param:
           - check
           - backup

@@ -49,41 +49,42 @@ check_roles:
   when: manual  
 ################ Deploy HA Clickhouse cluster ####################
 
-# .deploy:
-#   image: ${AIND}
-#   script:
-#     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
-#   allow_failure: false
+.deploy:
+  image: ${AIND}
+  script:
+    - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
+  allow_failure: false
+  when: manual  
+  
+zookeeper:
+  extends: .deploy
+  stage: zookeeper
+  variables:
+    ROLE_TAGS: zookeeper_install,zookeeper_config
 
-# zookeeper:
-#   extends: .deploy
-#   stage: zookeeper
-#   variables:
-#     ROLE_TAGS: zookeeper_install,zookeeper_config
+clickhouse:
+  extends: .deploy
+  stage: clickhouse
+  variables:
+    ROLE_TAGS: clickhouse_install,clickhouse_config
 
-# clickhouse:
-#   extends: .deploy
-#   stage: clickhouse
-#   variables:
-#     ROLE_TAGS: clickhouse_install,clickhouse_config
+haproxy:
+  extends: .deploy
+  stage: haproxy
+  variables:
+    ROLE_TAGS: haproxy_install,haproxy_config
 
-# haproxy:
-#   extends: .deploy
-#   stage: haproxy
-#   variables:
-#     ROLE_TAGS: haproxy_install,haproxy_config
+keepalived:
+  extends: .deploy
+  stage: keepalived
+  variables:
+    ROLE_TAGS: keepalived_install,keepalived_config
 
-# keepalived:
-#   extends: .deploy
-#   stage: keepalived
-#   variables:
-#     ROLE_TAGS: keepalived_install,keepalived_config
-
-# clickhouse_remove:
-#   extends: .deploy
-#   stage: clickhouse
-#   variables:
-#     ROLE_TAGS: remove
-#   only:
-#     variables:
-#     - $clickhouse_remove == "true"
+clickhouse_remove:
+  extends: .deploy
+  stage: clickhouse
+  variables:
+    ROLE_TAGS: remove
+  only:
+    variables:
+    - $clickhouse_remove == "true"
