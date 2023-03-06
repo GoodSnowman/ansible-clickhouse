@@ -1,7 +1,8 @@
 ---
 clickhouse_networks_default:
   - 0.0.0.0/0
-clickhouse_listen_host_default: "{{ ansible_default_ipv4.address }}"
+clickhouse_listen_host_default:
+  - "{{ ansible_default_ipv4.address }}"
 clickhouse_shards:  
   dns_saas: "{{ groups['clickhouse'] }}"
 
