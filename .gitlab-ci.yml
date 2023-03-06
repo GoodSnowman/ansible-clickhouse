@@ -48,10 +48,10 @@ before_script:
   script:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
   allow_failure: true
-
+  when: manual
+  
 default config:
   extends: .check_roles
-  when: manual
 
 check zk config:
   extends: .check_roles
