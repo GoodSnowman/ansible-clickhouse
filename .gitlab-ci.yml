@@ -3,7 +3,7 @@ variables:
   ANSIBLE_TAG: latest
   ANSIBLE_FORCE_COLOR: 'true'
   DEPLOY_ENV: 't1-p1'
-
+  ROLE_TAGS: 'all'
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -17,7 +17,6 @@ stages:
   - clickhouse
   - haproxy
   - keepalived
-#  - debug,check_replication,check_vars,check_status
 
 .vault: &vault
   - export VAULT_ADDR=${VAULT_ADDR}
@@ -41,11 +40,11 @@ before_script:
   - date
   - *vault
 
-check_all_roles:
+check_roles:
   image: ${AIND}
   stage: check_mode
   script:
-    - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
+    - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
   allow_failure: true
 
 ################ Deploy HA Clickhouse cluster ####################

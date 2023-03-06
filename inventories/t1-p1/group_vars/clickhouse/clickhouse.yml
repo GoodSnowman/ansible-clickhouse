@@ -27,7 +27,7 @@ clickhouse_users_custom:
     profile: default
     quota: default
   - name: "pdns_ch_usr"
-    password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:ch_grafana_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}" 
+    password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:pdns_ch_usr token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}" 
     dbs:
       - pdns
     networks: '{{ clickhouse_networks_default }}'
