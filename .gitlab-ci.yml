@@ -129,34 +129,6 @@ keepalived:
     ROLE_TAGS: keepalived_install,keepalived_config
 
 
-zookeeper configure:
-  extends: .configure
-  stage: zookeeper
-  variables:
-    ROLE_TAGS: zookeeper_config
-  when: manual
-
-clickhouse configure:
-  extends: .configure
-  stage: clickhouse
-  variables:
-    ROLE_TAGS: clickhouse_config
-  when: manual
-
-haproxy configure:
-  extends: .configure
-  stage: haproxy
-  variables:
-    ROLE_TAGS: haproxy_config
-  when: manual 
-
-keepalived configure:
-  extends: .configure
-  stage: keepalived
-  variables:
-    ROLE_TAGS: keepalived_config
-  when: manual
-
 # clickhouse_remove:
 #   extends: 
 #   stage: clickhouse

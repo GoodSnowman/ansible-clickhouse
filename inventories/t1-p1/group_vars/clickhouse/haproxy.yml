@@ -10,8 +10,6 @@ haproxy_frontend:
     bind:
       - listen: "0.0.0.0:{{ ch_frontend_tcp_port }}"
     mode: tcp
-    option:
-      - tcplog
     default_backend: ch-back-tcp
   - name: clickhouse_http
     bind:
