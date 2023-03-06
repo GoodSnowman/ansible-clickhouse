@@ -109,7 +109,7 @@ zookeeper:
   stage: zookeeper
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
-
+  needs: ["check zk config"]
 clickhouse:
   extends: .deploy
   stage: clickhouse
