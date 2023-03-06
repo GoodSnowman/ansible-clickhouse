@@ -3,7 +3,7 @@
   hosts: clickhouse
   become: true
   roles:
-   - zookeeper
-   - clickhouse
+  #  - zookeeper
+  #  - clickhouse
    - haproxy
    - keepalived-lb
