@@ -6,11 +6,16 @@ haproxy_global_raw_options:
   - stats timeout 30s
 
 haproxy_frontend:
-  - name: clickhouse
+  - name: clickhouse_tcp
     bind:
-      - listen: "0.0.0.0:{{ ch_frontend_port }}"
+      - listen: "0.0.0.0:{{ ch_frontend_tcp_port }}"
     mode: tcp
-    default_backend: clickhouse-servers
+    default_backend: clickhouse-tcp
+  - name: clickhouse_http
+    bind:
+      - listen: "{{ keepalived_lb_vip }}:{{ ch_frontend_http_port }}"
+    mode: http
+    default_backend: clickhouse-http
 
 haproxy_listen:
   - name: stats
@@ -23,7 +28,7 @@ haproxy_listen:
       refresh: 10s 
 
 haproxy_backend:
-  - name: clickhouse-servers
+  - name: clickhouse-tcp
     mode: tcp
     balance: roundrobin
     server:
@@ -38,6 +43,24 @@ haproxy_backend:
           - backup
       - name: dc1-v-clickhouse003
         listen: 10.13.248.53:9000
+        param:
+          - check
+          - backup
+  - name: clickhouse-http
+    mode: http
+    balance: roundrobin
+    server:
+      - name: dc1-v-clickhouse001
+        listen: 10.13.248.51:8123
+        param:
+          - check
+      - name: dc1-v-clickhouse002
+        listen: 10.13.248.52:8123
+        param:
+          - check
+          - backup
+      - name: dc1-v-clickhouse003
+        listen: 10.13.248.53:8123
         param:
           - check
           - backup
