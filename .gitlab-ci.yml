@@ -13,6 +13,7 @@ workflow:
 stages:
 #  - ansible_lint
   - check_mode
+  - test
   - zookeeper
   - clickhouse
   - haproxy
@@ -47,6 +48,7 @@ check_roles:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
   allow_failure: true
   when: manual  
+
 ################ Deploy HA Clickhouse cluster ####################
 
 .deploy:
@@ -55,7 +57,7 @@ check_roles:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
   allow_failure: false
   when: manual  
-  
+
 zookeeper:
   extends: .deploy
   stage: zookeeper

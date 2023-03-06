@@ -59,7 +59,7 @@ haproxy_backend:
         param:
           - check
       - name: dc1-v-clickhouse002
-        listen: "10.13.248.52:{{ clickhouse_http_port }"
+        listen: "10.13.248.52:{{ clickhouse_http_port }}"
         param:
           - check
           - backup
