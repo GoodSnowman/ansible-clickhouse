@@ -10,12 +10,12 @@ haproxy_frontend:
     bind:
       - listen: "0.0.0.0:{{ ch_frontend_tcp_port }}"
     mode: tcp
-    default_backend: clickhouse-tcp
+    default_backend: ch-back-tcp
   - name: clickhouse_http
     bind:
       - listen: "{{ keepalived_lb_vip }}:{{ clickhouse_http_port }}"
     mode: http
-    default_backend: clickhouse-http
+    default_backend: ch-back-http
 
 haproxy_listen:
   - name: stats
@@ -28,27 +28,27 @@ haproxy_listen:
       refresh: 10s 
 
 haproxy_backend:
-  - name: clickhouse-tcp
+  - name: ch-back-tcp
     mode: tcp
     balance: roundrobin
     option:
       - tcplog
     server:
       - name: dc1-v-clickhouse001
-        listen: 10.13.248.51:9000
+        listen: "10.13.248.51:{{ clickhouse_tcp_port }}"
         param:
           - check
       - name: dc1-v-clickhouse002
-        listen: 10.13.248.52:9000
+        listen: "10.13.248.52:{{ clickhouse_tcp_port }}"
         param:
           - check
           - backup
       - name: dc1-v-clickhouse003
-        listen: 10.13.248.53:9000
+        listen: "10.13.248.53:{{ clickhouse_tcp_port }}"
         param:
           - check
           - backup
-  - name: clickhouse-http
+  - name: ch-back-http
     mode: http
     balance: roundrobin
     option:
