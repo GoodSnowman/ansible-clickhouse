@@ -11,7 +11,6 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 stages:
-#  - ansible_lint
   - check_mode
   - test
   - zookeeper
@@ -41,13 +40,55 @@ before_script:
   - date
   - *vault
 
-check_roles:
+###### Check role #############################
+
+.check_roles:
   image: ${AIND}
   stage: check_mode
   script:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
   allow_failure: true
-  when: manual  
+
+default config:
+  extends: .check_roles
+  when: manual
+
+check zk config:
+  extends: .check_roles
+  variables:
+    ROLE_TAGS: zookeeper_install,zookeeper_config
+  rules:
+    - changes:
+        - roles/zookeeper/*
+        - inventories/t1-p1/group_vars/clickhouse/zookeeper.yml
+
+check ch config:
+  extends: .check_roles
+  variables:
+    ROLE_TAGS: clickhouse_install,clickhouse_config
+  rules:
+    - changes:
+        - roles/clickhouse/*
+        - inventories/t1-p1/group_vars/clickhouse/clickhouse.yml
+
+check haproxy config:
+  extends: .check_roles
+  variables:
+    ROLE_TAGS: haproxy_install,haproxy_config
+  rules:
+    - changes:
+        - roles/haproxy/*
+        - inventories/t1-p1/group_vars/clickhouse/haproxy.yml
+
+check keepalived config:
+  extends: .check_roles
+  variables:
+    ROLE_TAGS: keepalived_install,keepalived_config
+  rules:
+    - changes:
+        - roles/keepalived/*
+        - inventories/t1-p1/group_vars/clickhouse/keepalived.yml
+
 
 ################ Deploy HA Clickhouse cluster ####################
 
@@ -56,37 +97,71 @@ check_roles:
   script:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
   allow_failure: false
- 
+
+.configure:
+  image: ${AIND}
+  script:
+    - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
+  allow_failure: false
 
 zookeeper:
   extends: .deploy
   stage: zookeeper
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
-  when: manual  
+
 clickhouse:
   extends: .deploy
   stage: clickhouse
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
-  when: manual 
+
 haproxy:
   extends: .deploy
   stage: haproxy
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
-  when: manual 
+
 keepalived:
   extends: .deploy
   stage: keepalived
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config
-  when: manual 
-clickhouse_remove:
-  extends: .deploy
+
+
+zookeeper configure:
+  extends: .configure
+  stage: zookeeper
+  variables:
+    ROLE_TAGS: zookeeper_config
+  when: manual
+
+clickhouse configure:
+  extends: .configure
   stage: clickhouse
   variables:
-    ROLE_TAGS: remove
-  only:
-    variables:
-    - $clickhouse_remove == "true"
+    ROLE_TAGS: clickhouse_config
+  when: manual
+
+haproxy configure:
+  extends: .configure
+  stage: haproxy
+  variables:
+    ROLE_TAGS: haproxy_config
+  when: manual 
+
+keepalived configure:
+  extends: .configure
+  stage: keepalived
+  variables:
+    ROLE_TAGS: keepalived_config
+  when: manual
+
+# clickhouse_remove:
+#   extends: 
+#   stage: clickhouse
+#   variables:
+#     ROLE_TAGS: remove
+#   only:
+#     variables:
+#     - $clickhouse_remove == "true"
