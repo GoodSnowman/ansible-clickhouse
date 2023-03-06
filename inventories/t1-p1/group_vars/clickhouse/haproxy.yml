@@ -10,6 +10,8 @@ haproxy_frontend:
     bind:
       - listen: "0.0.0.0:{{ ch_frontend_tcp_port }}"
     mode: tcp
+    option:
+      - tcplog
     default_backend: ch-back-tcp
   - name: clickhouse_http
     bind:
@@ -31,8 +33,6 @@ haproxy_backend:
   - name: ch-back-tcp
     mode: tcp
     balance: roundrobin
-    option:
-      - tcplog
     server:
       - name: dc1-v-clickhouse001
         listen: "10.13.248.51:{{ clickhouse_tcp_port }}"

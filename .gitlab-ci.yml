@@ -56,32 +56,32 @@ check_roles:
   script:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
   allow_failure: false
-  when: manual  
+ 
 
 zookeeper:
   extends: .deploy
   stage: zookeeper
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
-
+  when: manual  
 clickhouse:
   extends: .deploy
   stage: clickhouse
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
-
+  when: manual 
 haproxy:
   extends: .deploy
   stage: haproxy
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
-
+  when: manual 
 keepalived:
   extends: .deploy
   stage: keepalived
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config
-
+  when: manual 
 clickhouse_remove:
   extends: .deploy
   stage: clickhouse
