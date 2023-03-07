@@ -1,0 +1,20 @@
+---
+  - name: restart node_exporter
+    ansible.builtin.command: /bin/true
+    notify:
+      - systemd restart node-exporter
+      - check node_exporter port
+    when:
+      - not ansible_check_mode
+
+  - name: systemd restart node-exporter
+    systemd:
+      daemon_reload: true
+      name: node_exporter
+      state: restarted
+
+  - name: check node_exporter port
+    ansible.builtin.wait_for:
+      port: "{{ node_exporter_web_listen_port }}"
+      timeout: 3
+      connect_timeout: 1

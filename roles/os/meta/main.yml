@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: Aleksey Kanshin & Aleksey Baykov
+  role_name: node_exporter
+  description: Prometheus Node Exporter
+  license: MIT
+  company: VTB
+  min_ansible_version: 2.10.7
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - xenial
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+  galaxy_tags:
+    - monitoring
+    - prometheus
+    - exporter
+    - metrics
+    - system
+
+dependencies: []

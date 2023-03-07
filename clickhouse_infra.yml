@@ -7,3 +7,4 @@
    - clickhouse
    - haproxy
    - keepalived-lb
+   - os

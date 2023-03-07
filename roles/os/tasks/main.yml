@@ -1,0 +1,125 @@
+---
+- name: ensure user group is exists
+  ansible.builtin.group:
+    name: "{{ node_exporter_group_name }}"
+    state: present
+  tags: [node_exporter]
+
+- name: ensure user is exist
+  ansible.builtin.user:
+    name: "{{ node_exporter_user_name }}"
+    shell: "/usr/sbin/nologin"
+    system: true
+    state: present
+  tags: [node_exporter]
+
+- name: ensure node_exporter directory are exists
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner | default(omit) }}"
+    group: "{{ item.group | default(omit) }}"
+    recurse: true
+    mode: 0755
+    state: directory
+  loop:
+    - path: "{{ node_exporter_dir }}"
+      owner: "{{ node_exporter_user_name }}"
+      group: "{{ node_exporter_group_name }}"
+    - path: "{{ node_exporter_dir }}/archive"
+      owner: "{{ node_exporter_user_name }}"
+      group: "{{ node_exporter_group_name }}"
+    - path: "{{ node_exporter_dir }}/source"
+      owner: "{{ node_exporter_user_name }}"
+      group: "{{ node_exporter_group_name }}"
+    - path: "{{ node_exporter_dir }}/source/{{ node_exporter_version }}"
+      owner: "{{ node_exporter_user_name }}"
+      group: "{{ node_exporter_group_name }}"
+    - path: "{{ node_exporter_binary_dir }}"
+  tags: [node_exporter]
+
+- name: ensure node_exporter archive is downloaded
+  vars:
+    node_exporter_archive_file: "node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+  get_url:
+    url: "{{ node_exporter_repository_url }}/v{{ node_exporter_version }}/{{ node_exporter_archive_file }}"
+    dest: "{{ node_exporter_dir }}/archive/{{ node_exporter_version }}.linux-amd64.tar.gz"
+    checksum: "sha256:{{ node_exporter_checksum }}"
+    mode: 0755
+  register: _download_binary
+  until: _download_binary is succeeded
+  retries: 2
+  delay: 2
+  when:
+    - not ansible_check_mode
+  tags: [node_exporter]
+
+- name: ensure node_exporter binary is extracted
+  ansible.builtin.unarchive:
+    src: "{{ node_exporter_dir }}/archive/{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "{{ node_exporter_dir }}/source/{{ node_exporter_version }}"
+    group: "{{ node_exporter_group_name }}"
+    owner: "{{ node_exporter_user_name }}"
+    mode: 0755
+    remote_src: true
+  when:
+    - not ansible_check_mode
+  tags: [node_exporter]
+
+- name: copy node_exporter to "/usr/local/bin"
+  vars:
+    node_exporter_source_path: "{{ node_exporter_dir }}/source/{{ node_exporter_version }}"
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ node_exporter_source_path }}/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+    dest: "{{ node_exporter_binary_dir }}/node_exporter"
+    group: "{{ node_exporter_group_name }}"
+    owner: "{{ node_exporter_user_name }}"
+    mode: 0755
+  notify:
+    - restart node_exporter
+  when:
+    - not ansible_check_mode
+  tags: [node_exporter]
+
+- name: ensure node_exporter systemd service is configured
+  ansible.builtin.template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart node_exporter
+  tags: [node_exporter]
+  
+- block:
+    - name: Create node_exporter config directory
+      file:
+        path: "/etc/node_exporter"
+        state: directory
+        owner: root
+        group: root
+        mode: u+rwX,g+rwX,o=rX
+
+    - name: Copy the node_exporter config file
+      template:
+        src: config.yaml.j2
+        dest: /etc/node_exporter/config.yaml
+        owner: root
+        group: "{{ node_exporter_group_name }}"
+        mode: 0640
+      notify: restart node_exporter
+  when: |
+    ( node_exporter_tls_server_config | length > 0 ) or
+    ( node_exporter_http_server_config | length > 0 ) or
+    ( node_exporter_basic_auth_users | length > 0 )
+  tags: [node_exporter]
+  
+- name: ensure node_exporter is enabled
+  systemd:
+    daemon_reload: true
+    name: node_exporter
+    enabled: true
+  when:
+    - not ansible_check_mode
+  tags: [node_exporter]
