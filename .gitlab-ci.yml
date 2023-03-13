@@ -49,11 +49,11 @@ before_script:
   allow_failure: true
   when: manual
 
-general config:
+check general config:
   extends: .check_roles
   variables:
     ROLE_TAGS: general_config,dns,ntp
-    
+
 check zk config:
   extends: .check_roles
   variables:
