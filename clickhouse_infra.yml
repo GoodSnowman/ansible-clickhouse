@@ -1,6 +1,6 @@
 ---
 - name: Installing infrastracture for ClickHouse
-  hosts: test #clickhouse
+  hosts: clickhouse
   become: true
   roles:
    - general
