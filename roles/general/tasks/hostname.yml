@@ -1,0 +1,22 @@
+---
+- name: Setting the hostname
+  hostname:
+    name: '{{ inventory_hostname_short }}'
+  when: inventory_hostname is not regex(_general_ip_address_pattern)
+  tags:
+    - molecule-notest
+
+- name: Configuring the /etc/hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1'
+    line: 127.0.0.1 localhost
+    state: present
+    insertbefore: BOF
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  when: inventory_hostname is not regex(_general_ip_address_pattern)
+  tags:
+    - molecule-notest

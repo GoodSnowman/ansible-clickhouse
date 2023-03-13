@@ -1,0 +1,10 @@
+{{ ansible_managed | comment }}
+
+[Time]
+NTP={{ general_ntp_servers | join(' ') }}
+{% if general_ntp_fallback_servers is truthy %}
+FallbackNTP={{ general_ntp_fallback_servers | join(' ') }}
+{% endif %}
+RootDistanceMaxSec={{ general_ntp_root_distance_max_sec }}
+PollIntervalMinSec={{ general_ntp_poll_interval_min_sec }}
+PollIntervalMaxSec={{ general_ntp_poll_interval_max_sec }}

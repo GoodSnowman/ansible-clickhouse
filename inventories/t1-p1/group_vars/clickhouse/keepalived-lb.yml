@@ -1,4 +1,5 @@
 ---
+keepalived_exporter: true
 keepalived_lb_global_defs:
   - router_id ocp_vrrp
   - enable_script_security

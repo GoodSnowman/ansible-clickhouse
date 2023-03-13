@@ -1,0 +1,20 @@
+---
+- name: Creating a sudo group
+  group:
+    name: '{{ general_sudo_group }}'
+    state: present
+
+- name: Adding the ability to use sudo without a password
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^%{{ general_sudo_group }}'
+    line: '%{{ general_sudo_group }} ALL=(ALL) NOPASSWD: ALL'
+    state: present
+    validate: visudo -cf %s
+  when: general_sudo_without_password is truthy
+
+- name: Creating a local groups
+  group:
+    name: '{{ item }}'
+    state: present
+  loop: '{{ general_groups }}'

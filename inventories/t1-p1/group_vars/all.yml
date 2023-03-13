@@ -1,2 +1,18 @@
 keepalived_lb_vip: 10.13.248.50
-ch_frontend_tcp_port: 9010
+ch_frontend_tcp_port: 9000
+
+# Enable NTP configuration.
+general_ntp_enabled: true
+# General NTP servers.
+general_ntp_servers:
+  - dc1-v-ntp001.infra.prod.01.vmw.t1.loc
+  
+# Enabling the resolv.conf configuration.
+general_dns_resolv_enabled: true
+# Nameservers that will be written to resolv.conf
+general_dns_servers:
+ - 10.13.24.1
+ - 10.13.24.2
+general_dns_search:
+ - prod.01.vmw.t1.loc
+

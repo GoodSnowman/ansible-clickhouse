@@ -1,0 +1,31 @@
+---
+- name: Creating a local user
+  user:
+    name: '{{ item.name }}'
+    comment: '{{ item.comment | default(omit, True) }}'
+    groups: '{{ item.groups | default(omit, True) }}'
+    password: '{{ item.password }}'
+    shell: '{{ item.shell | default(omit) }}'
+    state: present
+  loop: '{{ general_users }}'
+  when: item.password is defined
+
+- name: Adding a public SSH key
+  authorized_key:
+    user: '{{ item.name }}'
+    key: '{{ item.authorized_key }}'
+    comment: '{{ item.comment | default(omit, True) }}'
+  loop: '{{ general_users }}'
+  when: item.authorized_key is defined
+
+- name: Changing password authentication parameters
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: PasswordAuthentication {{ 'yes' if general_ssh_password_auth_enabled is truthy else 'no' }}
+    state: present
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  notify: reload sshd service

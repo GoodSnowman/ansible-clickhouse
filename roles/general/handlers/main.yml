@@ -1,0 +1,12 @@
+---
+- name: reload sshd service
+  systemd:
+    name: sshd
+    state: reloaded
+  when: not molecule_skip_handlers | default(False)
+
+- name: restart systemd-timesyncd
+  systemd:
+    name: systemd-timesyncd
+    state: restarted
+  when: not molecule_skip_handlers | default(False)

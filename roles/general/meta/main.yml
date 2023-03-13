@@ -1,0 +1,16 @@
+galaxy_info:
+  namespace: cloud
+  author: VTB.Cloud DevOps team
+  description: Role for initial server configuration
+  company: VTB.Cloud
+  license: MIT
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Ubuntu
+      versions: ['focal']
+
+  galaxy_tags: ['general']
+
+dependencies: []

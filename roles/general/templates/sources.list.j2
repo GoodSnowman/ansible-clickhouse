@@ -1,0 +1,12 @@
+{{ ansible_managed | comment }}
+
+deb {{ general_common_repository }} {{ ansible_distribution_release }} main restricted
+deb {{ general_common_repository }} {{ ansible_distribution_release }}-updates main restricted
+deb {{ general_common_repository }} {{ ansible_distribution_release }} universe
+deb {{ general_common_repository }} {{ ansible_distribution_release }}-updates universe
+deb {{ general_common_repository }} {{ ansible_distribution_release }} multiverse
+deb {{ general_common_repository }} {{ ansible_distribution_release }}-updates multiverse
+deb {{ general_common_repository }} {{ ansible_distribution_release }}-backports main restricted universe multiverse
+deb {{ general_common_repository }} {{ ansible_distribution_release }}-security main restricted
+deb {{ general_common_repository }} {{ ansible_distribution_release }}-security universe
+deb {{ general_common_repository }} {{ ansible_distribution_release }}-security multiverse

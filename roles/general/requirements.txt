@@ -1,0 +1,6 @@
+ansible-lint
+ansible==5.0.1
+dnspython
+molecule[docker,lint]
+passlib
+pytest-testinfra

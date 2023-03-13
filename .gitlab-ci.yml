@@ -4,14 +4,15 @@ variables:
   ANSIBLE_FORCE_COLOR: 'true'
   DEPLOY_ENV: 't1-p1'
   ROLE_TAGS: 'all'
-workflow:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
-    - if: $CI_COMMIT_TAG
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+# workflow:
+#   rules:
+#     - if: '$CI_PIPELINE_SOURCE == "web"'
+#     - if: $CI_COMMIT_TAG
+#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 stages:
   - check_mode
+  - general
   - zookeeper
   - clickhouse
   - haproxy
@@ -24,10 +25,8 @@ stages:
   - vault status
 
 .ssh: &ssh
-  - mkdir -p ~/.ssh
-  - touch ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
-  - chmod 700 ~/.ssh
+  - mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
+  - chmod 700 ~/.ssh && chmod 644 ~/.ssh/known_hosts
   - eval $(ssh-agent -s)
   - chmod 400 "$SRE_ADMIN_KEY"
   - ssh-add "$SRE_ADMIN_KEY"
@@ -50,6 +49,11 @@ before_script:
   allow_failure: true
   when: manual
 
+general config:
+  extends: .check_roles
+  variables:
+    ROLE_TAGS: general_config,dns,ntp
+    
 check zk config:
   extends: .check_roles
   variables:
@@ -68,7 +72,7 @@ check haproxy config:
 check keepalived config:
   extends: .check_roles
   variables:
-    ROLE_TAGS: keepalived_install,keepalived_config
+    ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
 
 ################ Deploy HA Clickhouse cluster #######################################################
 
@@ -77,6 +81,13 @@ check keepalived config:
   script:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
   allow_failure: false
+
+general:
+  extends: .deploy
+  stage: general
+  variables:
+    ROLE_TAGS: general_config,dns,ntp
+  needs: ["check general config"]
 
 zookeeper:
   extends: .deploy
@@ -103,7 +114,7 @@ keepalived:
   extends: .deploy
   stage: keepalived
   variables:
-    ROLE_TAGS: keepalived_install,keepalived_config
+    ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
   needs: ["check keepalived config"]
 
 ############# deploy Exporters ######################################################

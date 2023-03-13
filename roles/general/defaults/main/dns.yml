@@ -1,0 +1,28 @@
+---
+# Enabling the resolv.conf configuration.
+general_dns_resolv_enabled: false
+# Enabling DNS configuration via nsupdate.
+general_dns_nsupdate_enabled: false
+# DNS server for running nsupdate.
+general_dns_nsupdate_server: '{{ general_dns_servers | first }}'
+
+# Search paths that will be written to resolv.conf
+general_dns_search:
+  - t1-cloud.local
+  - service.t1-cloud.ru
+# Nameservers that will be written to resolv.conf
+general_dns_servers:
+  - 10.89.16.1
+  - 10.89.16.2
+
+# The host from which nsupdate is running.
+general_dns_managing_server: localhost
+# TTL DNS records.
+general_dns_ttl: 600
+
+# The name of the key to run nsupdate.
+general_dns_key_name: ''
+# The secret key to run nsupdate.
+general_dns_key_secret: ''
+# The secret key algorithm.
+general_dns_key_algorithm: ''

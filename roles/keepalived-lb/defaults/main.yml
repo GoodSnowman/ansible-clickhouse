@@ -1,5 +1,6 @@
 ---
 repository_source: external
+keepalived_exporter: false
 keepalived_lb_vip: ''
 keepalived_lb_version: latest
 keepalived_lb_global_defs: []

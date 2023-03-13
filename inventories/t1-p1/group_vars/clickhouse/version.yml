@@ -1,5 +1,4 @@
 ---
-#16.02.2023
 java_version: "19"
 java_minior_version: "19.0.2"
 zookeeper_version: "3.8.1"

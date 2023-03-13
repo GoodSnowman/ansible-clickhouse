@@ -1,10 +1,11 @@
 ---
 - name: Installing infrastracture for ClickHouse
-  hosts: clickhouse
+  hosts: test #clickhouse
   become: true
   roles:
+   - general
    - zookeeper
    - clickhouse
    - haproxy
    - keepalived-lb
-   - os
+   - node-exporter

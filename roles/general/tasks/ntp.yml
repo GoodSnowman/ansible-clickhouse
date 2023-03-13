@@ -1,0 +1,22 @@
+---
+- name: Install systemd-timesyncd
+  apt:
+    name: systemd-timesyncd
+    state: present
+    update_cache: true
+
+- name: Enable systemd-timesyncd unit
+  systemd:
+    name: systemd-timesyncd
+    state: started
+    enabled: true
+
+- name: Configure NTP servers
+  template:
+    src: timesyncd.conf.j2
+    dest: /etc/systemd/timesyncd.conf
+    mode: 0644
+    owner: root
+    group: root
+    backup: true
+  notify: restart systemd-timesyncd

@@ -1,0 +1,25 @@
+---
+# Users to be created.
+# How to generate password: https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-encrypted-passwords-for-the-user-module
+general_users: []
+#  - name: ivanoviv
+#    comment: Ilia Ivanov
+#    groups: ['sudo']
+#    password: '$6$lJeJRW9JLyHpxrfr$BquXNHPsbpHyhz0t61WfQzaqpMQMc/Z.BQMar4rclXwWWVo0kd.QvCTFUw4TBQWyQg.p2ZKC7woLI1rxcaG3Y/'
+#    authorized_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDNKhwAn4ax9eWAvRx1lsrenVrN7HUgJ0x7AQHvrdC7iOUy2trQVLV5VeVcFYaer8WLCk/8la+7fnEWSYPUi5ky6AMuC+e7rQNQp+K77MZbNLMdTiAGlMURb44Zm15q3jlw5B0ejuKuH5gzmilTP2R05xPxUSpTlE23+snHc9cqsco96EXpowPXi+djjwXmHX04UwP5RQTJIosjrcCA0HIc2cuYNfX/1GatNwuwv8JCD6vZsG8g36klzLk9H23ja8QHjlRm3kLXqfyI7UkN32l7iThNFs2kXq8h9b7jGqImxGS12Am+hRUDy/BJtE+TvpK5WMqIQk9grE1ymPfr32SyTbvuc8tG6jQuczeoQ9tK9DLcS9LR/YbqyaxkpZNzCYe/CQB99Nnv0K9jPku8x7Bn/QULnqy47lJJVEdbNDWNGOs1JGTJbFBGIfR68jaLlJDTK/QSrj56XWcEKc9lXG20Ouho0M0POym8PGwOEVMYe34guDwagT1JEuunlZi+chc='
+#
+#  - name: akozak
+#    password: '$6$qidanNv9w3MvBdmL$.stN.R0x3zSb9Fr1voRGZpJ2l1CLdblkQMgNKwy6ksZAgWEyNmbsgzIxeT1ab0XwiyJloBcnhMNnap/pT.u8J.'
+
+# Groups to be created.
+general_groups: []
+#  - admin
+#  - support
+
+# The general group to include users who must have root privileges.
+general_sudo_group: sudo
+# Provides the ability to use sudo without a password.
+general_sudo_without_password: true
+
+# Enabling password authentication via SSH.
+general_ssh_password_auth_enabled: true

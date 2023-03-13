@@ -1,0 +1,21 @@
+---
+- name: Configuring the hostname
+  include_tasks: hostname.yml
+  tags: [general_config]
+
+- name: Creating local groups
+  include_tasks: local_groups.yml
+  tags: [general_config]
+  
+- name: Creating local users
+  include_tasks: local_users.yml
+  tags: [general_config]
+
+- name: Configuring DNS
+  include_tasks: dns.yml
+  tags: [dns]
+
+- name: Configuring NTP servers
+  include_tasks: ntp.yml
+  when: general_ntp_enabled is truthy
+  tags: [ntp]

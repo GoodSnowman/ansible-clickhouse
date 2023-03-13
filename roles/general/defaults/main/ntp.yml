@@ -1,0 +1,17 @@
+---
+# Enable NTP configuration.
+general_ntp_enabled: false
+
+# General NTP servers.
+general_ntp_servers:
+  - pool.ntp.org
+
+# Standby NTP servers.
+general_ntp_fallback_servers: []
+#  - ntp.ubuntu.com
+
+# Maximum acceptable root distance.
+general_ntp_root_distance_max_sec: 5
+# The minimum and maximum poll intervals for NTP messages.
+general_ntp_poll_interval_min_sec: 32
+general_ntp_poll_interval_max_sec: 2048

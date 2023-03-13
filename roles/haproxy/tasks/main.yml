@@ -1,8 +1,5 @@
 ---
 
-- debug:
-    msg: "Gateway to haproxy: {{ keepalived_lb_vip }}:{{ch_frontend_port }}"
-    
 - name: Add key for haproxy from external repository
   ansible.builtin.apt_key:
     keyserver: "{{ haproxy_keyserver }}"

@@ -1,0 +1,8 @@
+{{ ansible_managed | comment }}
+
+{% if (general_dns_search) %}
+search {{ general_dns_search | join(' ') }}
+{% endif %}
+{% for server in general_dns_servers %}
+nameserver {{ server }}
+{% endfor %}

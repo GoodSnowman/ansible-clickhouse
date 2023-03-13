@@ -1,0 +1,29 @@
+---
+- name: Configuring resolv.conf on the host
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  when: general_dns_resolv_enabled is truthy
+
+- name: Updating DNS records
+  nsupdate:
+    server: '{{ general_dns_nsupdate_server }}'
+    zone: "{{ inventory_hostname | regex_replace('^' + inventory_hostname_short + '\\.', '') }}"
+    record: '{{ inventory_hostname_short }}'
+    type: A
+    ttl: '{{ general_dns_ttl }}'
+    value: '{{ ansible_host }}'
+    state: present
+    key_algorithm: '{{ general_dns_key_algorithm | default(omit, True) }}'
+    key_name: '{{ general_dns_key_name | default(omit, True) }}'
+    key_secret: '{{ general_dns_key_secret | default(omit, True) }}'
+  become: false
+  when:
+    - general_dns_nsupdate_enabled is truthy
+    - ansible_host is regex(_general_ip_address_pattern)
+    - inventory_hostname is not regex(_general_ip_address_pattern)
+  delegate_to: '{{ general_dns_managing_server }}'
