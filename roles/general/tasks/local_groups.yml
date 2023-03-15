@@ -3,6 +3,7 @@
   group:
     name: '{{ general_sudo_group }}'
     state: present
+  tags: [general_config]
 
 - name: Adding the ability to use sudo without a password
   lineinfile:
@@ -12,9 +13,11 @@
     state: present
     validate: visudo -cf %s
   when: general_sudo_without_password is truthy
-
+  tags: [general_config]
+  
 - name: Creating a local groups
   group:
     name: '{{ item }}'
     state: present
   loop: '{{ general_groups }}'
+  tags: [general_config]

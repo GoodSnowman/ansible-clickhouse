@@ -3,9 +3,8 @@
   hostname:
     name: '{{ inventory_hostname_short }}'
   when: inventory_hostname is not regex(_general_ip_address_pattern)
-  tags:
-    - molecule-notest
-
+  tags: [general_config]
+  
 - name: Configuring the /etc/hosts file
   lineinfile:
     path: /etc/hosts
@@ -18,5 +17,4 @@
     mode: 0644
     backup: true
   when: inventory_hostname is not regex(_general_ip_address_pattern)
-  tags:
-    - molecule-notest
+  tags: [general_config]

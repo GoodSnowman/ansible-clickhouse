@@ -8,7 +8,8 @@
     mode: 0644
     backup: true
   when: general_dns_resolv_enabled is truthy
-
+  tags: [dns]
+  
 - name: Updating DNS records
   nsupdate:
     server: '{{ general_dns_nsupdate_server }}'
@@ -27,3 +28,4 @@
     - ansible_host is regex(_general_ip_address_pattern)
     - inventory_hostname is not regex(_general_ip_address_pattern)
   delegate_to: '{{ general_dns_managing_server }}'
+  tags: [dns]

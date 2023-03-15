@@ -4,13 +4,13 @@
     name: systemd-timesyncd
     state: present
     update_cache: true
-
+  tags: [ntp]
 - name: Enable systemd-timesyncd unit
   systemd:
     name: systemd-timesyncd
     state: started
     enabled: true
-
+  tags: [ntp]
 - name: Configure NTP servers
   template:
     src: timesyncd.conf.j2
@@ -20,3 +20,4 @@
     group: root
     backup: true
   notify: restart systemd-timesyncd
+  tags: [ntp]
