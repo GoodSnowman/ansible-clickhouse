@@ -11,9 +11,9 @@
   include_tasks: local_users.yml
   tags: [general_config]
 
-- name: Configuring DNS
-  include_tasks: dns.yml
-  tags: [dns]
+#- name: Configuring DNS
+#  include_tasks: dns.yml
+#  tags: [dns]
 
 - name: Configuring NTP servers
   include_tasks: ntp.yml
