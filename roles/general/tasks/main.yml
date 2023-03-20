@@ -15,7 +15,7 @@
 #  include_tasks: dns.yml
 #  tags: [dns]
 
-- name: Configuring NTP servers
-  include_tasks: ntp.yml
-  when: general_ntp_enabled is truthy
-  tags: [ntp]
+#- name: Configuring NTP servers
+#  include_tasks: ntp.yml
+#  when: general_ntp_enabled is truthy
+#  tags: [ntp]
