@@ -2,7 +2,7 @@ variables:
   AIND: git-registry.service.t1-cloud.ru/sre/docker/ansible:${ANSIBLE_TAG}
   ANSIBLE_TAG: latest
   ANSIBLE_FORCE_COLOR: 'true'
-  DEPLOY_ENV: 't1-p1'
+  DEPLOY_ENV: 'dnsaas-test'
   ROLE_TAGS: 'all'
 # workflow:
 #   rules:
@@ -13,11 +13,11 @@ variables:
 stages:
   - check_mode
   - general
-  - zookeeper
-  - clickhouse
-  - haproxy
-  - keepalived
-  - exporters
+#  - zookeeper
+#  - clickhouse
+#  - haproxy
+#  - keepalived
+#  - exporters
 
 .vault: &vault
   - export VAULT_ADDR=${VAULT_ADDR}
@@ -31,7 +31,7 @@ stages:
   - chmod 400 "$SRE_ADMIN_KEY"
   - ssh-add "$SRE_ADMIN_KEY"
 #  - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
-  - ssh-keyscan 10.13.248.51 10.13.248.52 10.13.248.53 > ~/.ssh/known_hosts
+  - ssh-keyscan 10.13.247.51 10.13.247.52 10.13.247.53 > ~/.ssh/known_hosts
 
 before_script:
   - ansible -m debug -a 'var=ansible_playbook_python' localhost

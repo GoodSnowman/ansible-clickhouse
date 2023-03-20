@@ -1,0 +1,73 @@
+---
+haproxy_packet_name: haproxy
+
+haproxy_global_raw_options:
+  - stats socket /var/lib/haproxy/stats mode 660 level admin expose-fd listeners
+  - stats timeout 30s
+
+haproxy_frontend:
+  - name: clickhouse
+    bind:
+      - listen: "{{ keepalived_lb_vip }}:{{ clickhouse_tcp_port }}"
+    mode: tcp
+    default_backend: ch-back-tcp
+  - name: clickhouse_tcp
+    bind:
+      - listen: "0.0.0.0:{{ ch_frontend_tcp_port }}"
+    mode: tcp
+    default_backend: ch-back-tcp
+  - name: clickhouse_http
+    bind:
+      - listen: "{{ keepalived_lb_vip }}:{{ clickhouse_http_port }}"
+    mode: http
+    default_backend: ch-back-http
+
+haproxy_listen:
+  - name: stats
+    description: Global statistics
+    bind:
+      - listen: 0.0.0.0:8404
+    mode: http 
+    stats:
+      enable: true
+      refresh: 10s 
+
+haproxy_backend:
+  - name: ch-back-tcp
+    mode: tcp
+    balance: roundrobin
+    server:
+      - name: dc1-v-clickhouse001
+        listen: "10.13.248.51:{{ clickhouse_tcp_port }}"
+        param:
+          - check
+      - name: dc1-v-clickhouse002
+        listen: "10.13.248.52:{{ clickhouse_tcp_port }}"
+        param:
+          - check
+          - backup
+      - name: dc1-v-clickhouse003
+        listen: "10.13.248.53:{{ clickhouse_tcp_port }}"
+        param:
+          - check
+          - backup
+  - name: ch-back-http
+    mode: http
+    balance: roundrobin
+    option:
+      - forwardfor
+    server:
+      - name: dc1-v-clickhouse001
+        listen: "10.13.248.51:{{ clickhouse_http_port }}"
+        param:
+          - check
+      - name: dc1-v-clickhouse002
+        listen: "10.13.248.52:{{ clickhouse_http_port }}"
+        param:
+          - check
+          - backup
+      - name: dc1-v-clickhouse003
+        listen: "10.13.248.53:{{ clickhouse_http_port }}"
+        param:
+          - check
+          - backup
