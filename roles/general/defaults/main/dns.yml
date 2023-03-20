@@ -2,7 +2,7 @@
 # Enabling the resolv.conf configuration.
 general_dns_resolv_enabled: false
 # Enabling DNS configuration via nsupdate.
-general_dns_nsupdate_enabled: false
+general_dns_nsupdate_enabled: true
 # DNS server for running nsupdate.
 general_dns_nsupdate_server: '{{ general_dns_servers | first }}'
 
