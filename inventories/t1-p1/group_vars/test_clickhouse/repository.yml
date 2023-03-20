@@ -1,6 +1,6 @@
 ---
-#repository_source: external
-repository_source: internal
+repository_source: external
+  #repository_source: internal
 __lsb_release: focal
 # Default internal repository for deb packages(keepalived)
 apt_proxy_repository: "deb https://nexus.t1.cloud/repository/apt-proxy/ focal main"

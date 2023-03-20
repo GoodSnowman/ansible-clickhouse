@@ -1,8 +1,12 @@
 #dc1-v-clickhouse-vip.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.50
-[clickhouse]
-dc1-v-clickhouse001.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.51
-dc1-v-clickhouse002.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.52
-dc1-v-clickhouse003.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.53
+#[clickhouse]
+#dc1-v-clickhouse001.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.51
+#dc1-v-clickhouse002.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.52
+#dc1-v-clickhouse003.dnsaas.prod.01.vmw.t1.loc ansible_host=10.13.248.53
+
+[test_clickhouse]
+test-clickhouse-perlin-1 ansible_host=185.159.111.59 ansible_user=aperlin
+test-clickhouse-perlin-2 ansible_host=185.159.111.60 ansible_user=aperlin
 
 [all]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'

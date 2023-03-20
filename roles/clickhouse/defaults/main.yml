@@ -7,6 +7,9 @@ clickhouse_version: 'latest'
 clickhouse_service_ensure: 'started'
 clickhouse_service_enable: true
 
+clickhouse_repository: "deb https://packages.clickhouse.com/deb stable main"
+clickhouse_repo_key: "https://packages.clickhouse.com/deb/dists/stable/Release.gpg"
+
 clickhouse_package:
   - clickhouse-client
   - clickhouse-server
@@ -62,9 +65,9 @@ clickhouse_networks_default: ['0.0.0.0/0']
 
 clickhouse_users_default:
   - {name: "default", password: "", networks: "{{ clickhouse_networks_default }}", profile: "default", quota: "default", comment: "Default user for login if user not defined"}
-  - {name: "readonly", password: "", networks: "{{ clickhouse_networks_default }}", profile: "readonly", quota: "default", comment: "Example of user with readonly access"}
+    #  - {name: "readonly", password: "", networks: "{{ clickhouse_networks_default }}", profile: "readonly", quota: "default", comment: "Example of user with readonly access"}
 
-user_default_password: ""
+user_default_password: "L0,hjleiysqDth[jk@p1"
 
 clickhouse_ready_retries: 3
 clickhouse_ready_delay: 5

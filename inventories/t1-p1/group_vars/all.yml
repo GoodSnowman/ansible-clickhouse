@@ -1,6 +1,6 @@
-keepalived_lb_vip: 10.13.248.50
-ch_frontend_tcp_port: 9000
-
+#keepalived_lb_vip: 10.13.248.50
+#ch_frontend_tcp_port: 9000
+#
 # Enable NTP configuration.
 general_ntp_enabled: true
 # General NTP servers.
