@@ -89,45 +89,45 @@ general:
     ROLE_TAGS: general_config,dns,ntp
   needs: ["check general config"]
 
-zookeeper:
-  extends: .deploy
-  stage: zookeeper
-  variables:
-    ROLE_TAGS: zookeeper_install,zookeeper_config
-  needs: ["check zk config"]
+# zookeeper:
+#   extends: .deploy
+#   stage: zookeeper
+#   variables:
+#     ROLE_TAGS: zookeeper_install,zookeeper_config
+#   needs: ["check zk config"]
 
-clickhouse:
-  extends: .deploy
-  stage: clickhouse
-  variables:
-    ROLE_TAGS: clickhouse_install,clickhouse_config
-  needs: ["check ch config"]
+# clickhouse:
+#   extends: .deploy
+#   stage: clickhouse
+#   variables:
+#     ROLE_TAGS: clickhouse_install,clickhouse_config
+#   needs: ["check ch config"]
 
-haproxy:
-  extends: .deploy
-  stage: haproxy
-  variables:
-    ROLE_TAGS: haproxy_install,haproxy_config
-  needs: ["check haproxy config"]
+# haproxy:
+#   extends: .deploy
+#   stage: haproxy
+#   variables:
+#     ROLE_TAGS: haproxy_install,haproxy_config
+#   needs: ["check haproxy config"]
 
-keepalived:
-  extends: .deploy
-  stage: keepalived
-  variables:
-    ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
-  needs: ["check keepalived config"]
+# keepalived:
+#   extends: .deploy
+#   stage: keepalived
+#   variables:
+#     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
+#   needs: ["check keepalived config"]
 
-############# deploy Exporters ######################################################
+# ############# deploy Exporters ######################################################
 
-node exporter:
-  stage: exporters
-  image: ${AIND}
-  script:
-    - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
-  variables:
-    ROLE_TAGS: node_exporter
-  allow_failure: false
-  when: manual
+# node exporter:
+#   stage: exporters
+#   image: ${AIND}
+#   script:
+#     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
+#   variables:
+#     ROLE_TAGS: node_exporter
+#   allow_failure: false
+#   when: manual
 
 # clickhouse_remove:
 #   extends: 
