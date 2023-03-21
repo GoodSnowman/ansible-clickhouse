@@ -41,7 +41,6 @@ before_script:
   script:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --check -vv --diff
   allow_failure: true
-  when: manual
 
 
 ###### Checking prod config ##################################################################
@@ -53,7 +52,8 @@ check general config:
     ROLE_TAGS: general_config,dns,ntp
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-
+      when: manual
+      
 check zk config:
   extends: .check_roles
   environment: prod
@@ -61,6 +61,7 @@ check zk config:
     ROLE_TAGS: zookeeper_install,zookeeper_config
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 check ch config:
   extends: .check_roles
@@ -69,6 +70,7 @@ check ch config:
     ROLE_TAGS: clickhouse_install,clickhouse_config
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 check haproxy config:
   extends: .check_roles
@@ -77,6 +79,7 @@ check haproxy config:
     ROLE_TAGS: haproxy_install,haproxy_config
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 check keepalived config:
   extends: .check_roles
@@ -85,6 +88,7 @@ check keepalived config:
     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 ###### Checking test config ##################################################################
 
@@ -95,6 +99,7 @@ check general test config:
     ROLE_TAGS: general_config,dns,ntp
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 check zk test config:
   extends: .check_roles
@@ -103,6 +108,7 @@ check zk test config:
     ROLE_TAGS: zookeeper_install,zookeeper_config
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 check ch test config:
   extends: .check_roles
@@ -111,6 +117,7 @@ check ch test config:
     ROLE_TAGS: clickhouse_install,clickhouse_config
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 check haproxy test config:
   extends: .check_roles
@@ -119,6 +126,7 @@ check haproxy test config:
     ROLE_TAGS: haproxy_install,haproxy_config
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 check keepalived test config:
   extends: .check_roles
@@ -127,6 +135,7 @@ check keepalived test config:
     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 ################ Deploy HA Clickhouse cluster #######################################################
 
@@ -147,6 +156,7 @@ general:
   needs: ["check general config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 zookeeper:
   extends: .deploy
@@ -157,6 +167,7 @@ zookeeper:
   needs: ["check zk config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 clickhouse:
   extends: .deploy
@@ -167,6 +178,7 @@ clickhouse:
   needs: ["check ch config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 haproxy:
   extends: .deploy
@@ -177,6 +189,7 @@ haproxy:
   needs: ["check haproxy config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 keepalived:
   extends: .deploy
@@ -187,6 +200,7 @@ keepalived:
   needs: ["check keepalived config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 ############### Deploy test #########################################################################
 
@@ -199,6 +213,7 @@ deploy general in TEST:
   needs: ["check general config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 deploy zookeeper in TEST:
   extends: .deploy
@@ -209,6 +224,7 @@ deploy zookeeper in TEST:
   needs: ["check zk config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 deploy clickhouse in TEST:
   extends: .deploy
@@ -219,6 +235,7 @@ deploy clickhouse in TEST:
   needs: ["check ch config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 deploy haproxy in TEST:
   extends: .deploy
@@ -229,6 +246,7 @@ deploy haproxy in TEST:
   needs: ["check haproxy config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 deploy keepalived in TEST:
   extends: .deploy
@@ -239,6 +257,7 @@ deploy keepalived in TEST:
   needs: ["check keepalived config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
+      when: manual
 
 ############# deploy Exporters ######################################################
 
@@ -250,11 +269,11 @@ node exporter:
   variables:
     ROLE_TAGS: node_exporter
   allow_failure: false
-  when: manual
   environment: prod
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-
+      when: manual
+      
 node exporter test:
   stage: exporters
   image: ${AIND}
@@ -263,7 +282,7 @@ node exporter test:
   variables:
     ROLE_TAGS: node_exporter
   allow_failure: false
-  when: manual
   environment: prod
   rules:
     - if: $CI_COMMIT_BRANCH == "test"    
+      when: manual
