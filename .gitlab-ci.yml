@@ -7,11 +7,11 @@ variables:
 stages:
   - check_mode
   - general
-#  - zookeeper
-#  - clickhouse
-#  - haproxy
-#  - keepalived
-#  - exporters
+  - zookeeper
+  - clickhouse
+  - haproxy
+  - keepalived
+  - exporters
 
 .vault: &vault
   - export VAULT_ADDR=${VAULT_ADDR}
