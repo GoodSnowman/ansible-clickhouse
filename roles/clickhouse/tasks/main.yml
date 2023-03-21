@@ -9,13 +9,13 @@
         - 'empty.yml'
       paths:
         - 'vars'
-  tags: [clickhouse_install]
+  tags: [always]
 
 - include_tasks: precheck.yml
-  tags: [clickhouse_install]
+  tags: [always]
 
 - include_tasks: params.yml
-  tags: [clickhouse_install]
+  tags: [always]
 
 - include_tasks:
     file: "{{ lookup('first_found', params) }}"
@@ -37,17 +37,17 @@
   when: not clickhouse_remove|bool
 
 - name: "Notify Handlers Now"
-  tags: [clickhouse_config]
+  tags: [always]
   meta: flush_handlers
 
 - include_tasks: service.yml
-  tags: [clickhouse_install]
+  tags: [always]
 
 - name: "Wait for Clickhouse Server to Become Ready"
   wait_for:
     port: "{{ clickhouse_tcp_port }}"
     delay: "{{ clickhouse_ready_delay }}"
-  tags: [clickhouse_install]
+  tags: [always]
   when: not clickhouse_remove|bool
 
 - include_tasks:
@@ -70,4 +70,3 @@
       tags: [remove]
   tags: [remove]
   when: clickhouse_remove|bool
-
