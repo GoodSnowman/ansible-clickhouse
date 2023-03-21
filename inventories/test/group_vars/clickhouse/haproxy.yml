@@ -38,16 +38,16 @@ haproxy_backend:
     balance: roundrobin
     server:
       - name: dc1-v-clickhouse001
-        listen: "10.13.248.51:{{ clickhouse_tcp_port }}"
+        listen: "10.13.247.51:{{ clickhouse_tcp_port }}"
         param:
           - check
       - name: dc1-v-clickhouse002
-        listen: "10.13.248.52:{{ clickhouse_tcp_port }}"
+        listen: "10.13.247.52:{{ clickhouse_tcp_port }}"
         param:
           - check
           - backup
       - name: dc1-v-clickhouse003
-        listen: "10.13.248.53:{{ clickhouse_tcp_port }}"
+        listen: "10.13.247.53:{{ clickhouse_tcp_port }}"
         param:
           - check
           - backup
@@ -58,16 +58,16 @@ haproxy_backend:
       - forwardfor
     server:
       - name: dc1-v-clickhouse001
-        listen: "10.13.248.51:{{ clickhouse_http_port }}"
+        listen: "10.13.247.51:{{ clickhouse_http_port }}"
         param:
           - check
       - name: dc1-v-clickhouse002
-        listen: "10.13.248.52:{{ clickhouse_http_port }}"
+        listen: "10.13.247.52:{{ clickhouse_http_port }}"
         param:
           - check
           - backup
       - name: dc1-v-clickhouse003
-        listen: "10.13.248.53:{{ clickhouse_http_port }}"
+        listen: "10.13.247.53:{{ clickhouse_http_port }}"
         param:
           - check
           - backup
