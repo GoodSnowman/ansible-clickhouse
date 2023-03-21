@@ -210,7 +210,7 @@ deploy general in TEST:
   stage: general
   variables:
     ROLE_TAGS: general_config,dns,ntp
-  needs: ["check general config"]
+  needs: ["check general test config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
       when: manual
@@ -221,7 +221,7 @@ deploy zookeeper in TEST:
   stage: zookeeper
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
-  needs: ["check zk config"]
+  needs: ["check zk test config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
       when: manual
@@ -232,7 +232,7 @@ deploy clickhouse in TEST:
   stage: clickhouse
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
-  needs: ["check ch config"]
+  needs: ["check ch test config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
       when: manual
@@ -243,7 +243,7 @@ deploy haproxy in TEST:
   stage: haproxy
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
-  needs: ["check haproxy config"]
+  needs: ["check haproxy test config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
       when: manual
@@ -254,7 +254,7 @@ deploy keepalived in TEST:
   stage: keepalived
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
-  needs: ["check keepalived config"]
+  needs: ["check keepalived test config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
       when: manual
