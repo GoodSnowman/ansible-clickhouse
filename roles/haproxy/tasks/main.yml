@@ -57,6 +57,8 @@
     state: started
     enabled: true
   tags: [haproxy_config]
+  when:
+    - not ansible_check_mode
 
 - name: Flush handlers
   meta: flush_handlers
