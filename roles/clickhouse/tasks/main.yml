@@ -12,12 +12,8 @@
   tags: [always]
 
 - include_tasks: precheck.yml
-  apply:
-    tags: [always]
 
 - include_tasks: params.yml
-  apply:
-    tags: [always]
 
 - include_tasks:
     file: "{{ lookup('first_found', params) }}"
@@ -41,8 +37,6 @@
   meta: flush_handlers
 
 - include_tasks: service.yml
-  apply:
-    tags: [always]
 
 - name: "Wait for Clickhouse Server to Become Ready"
   wait_for:

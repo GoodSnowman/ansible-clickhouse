@@ -1,4 +1,5 @@
 - name: Requirements check | Checking sse4_2 support
   command: grep -q sse4_2 /proc/cpuinfo
   changed_when: False
+  tags: [always]
 
