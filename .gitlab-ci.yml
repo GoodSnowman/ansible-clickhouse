@@ -95,7 +95,7 @@ check keepalived config:
 
 check general test config:
   extends: .check_roles
-  environment: prod
+  environment: test
   variables:
     ROLE_TAGS: general_config,dns,ntp
   rules:
@@ -104,7 +104,7 @@ check general test config:
 
 check zk test config:
   extends: .check_roles
-  environment: prod
+  environment: test
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
   rules:
@@ -113,7 +113,7 @@ check zk test config:
 
 check ch test config:
   extends: .check_roles
-  environment: prod
+  environment: test
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
   rules:
@@ -122,7 +122,7 @@ check ch test config:
 
 check haproxy test config:
   extends: .check_roles
-  environment: prod
+  environment: test
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
   rules:
@@ -131,7 +131,7 @@ check haproxy test config:
 
 check keepalived test config:
   extends: .check_roles
-  environment: prod
+  environment: test
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
   rules:
@@ -207,7 +207,7 @@ keepalived:
 
 deploy general in TEST:
   extends: .deploy
-  environment: prod
+  environment: test
   stage: general
   variables:
     ROLE_TAGS: general_config,dns,ntp
@@ -218,7 +218,7 @@ deploy general in TEST:
 
 deploy zookeeper in TEST:
   extends: .deploy
-  environment: prod
+  environment: test
   stage: zookeeper
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
@@ -229,7 +229,7 @@ deploy zookeeper in TEST:
 
 deploy clickhouse in TEST:
   extends: .deploy
-  environment: prod
+  environment: test
   stage: clickhouse
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
@@ -240,7 +240,7 @@ deploy clickhouse in TEST:
 
 deploy haproxy in TEST:
   extends: .deploy
-  environment: prod
+  environment: test
   stage: haproxy
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
@@ -251,7 +251,7 @@ deploy haproxy in TEST:
 
 deploy keepalived in TEST:
   extends: .deploy
-  environment: prod
+  environment: test
   stage: keepalived
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
@@ -283,7 +283,7 @@ node exporter test:
   variables:
     ROLE_TAGS: node_exporter
   allow_failure: false
-  environment: prod
+  environment: test
   rules:
     - if: $CI_COMMIT_BRANCH == "test"    
       when: manual
