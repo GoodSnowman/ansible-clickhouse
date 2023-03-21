@@ -97,3 +97,5 @@
     owner: zookeeper
     group: zookeeper
   register: zookeeper_service
+  when:
+    - not ansible_check_mode
