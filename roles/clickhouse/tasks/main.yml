@@ -56,12 +56,14 @@
     apply:
       tags: [clickhouse_config, config_db]
   when: not clickhouse_remove|bool
+  tags: [clickhouse_config]
 
 - include_tasks:
     file: configure/dict.yml
-    apply:
-      tags: [clickhouse_config, config_dict]
+    # apply:
+    #   tags: [clickhouse_config, config_dict]
   when: not clickhouse_remove|bool
+  tags: [clickhouse_config]
 
 - include_tasks:
     file: remove.yml
