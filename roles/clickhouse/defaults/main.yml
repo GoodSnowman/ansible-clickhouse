@@ -1,7 +1,7 @@
 ---
 # defaults file for clickhouse
 
-repository_source: external
+repository_source: internal
 
 clickhouse_version: 'latest'
 clickhouse_service_ensure: 'started'

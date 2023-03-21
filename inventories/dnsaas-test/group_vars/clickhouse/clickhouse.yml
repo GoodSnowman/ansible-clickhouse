@@ -8,27 +8,27 @@ clickhouse_shards:
 
 clickhouse_zookeeper_hosts: "{{ groups['clickhouse'] }}"
 clickhouse_zookeeper_username: clickhouse
-clickhouse_zookeeper_password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zk_clickhouse_usr_auth token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
+clickhouse_zookeeper_password: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:zk_clickhouse_usr_auth token={{ TEST_VAULT_TOKEN }} url={{ TEST_VAULT_ADDR }}') }}"
 
 clickhouse_dbs_custom:
   - name: monitoring
   - name: pdns
 
 clickhouse_users_default:
-  - {name: "default", password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:ch_default_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}", networks: "{{ clickhouse_networks_default }}", profile: "default", quota: "default", comment: "Default user for login if user not defined"}
-  - {name: "readonly", password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:ch_readonly_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}", networks: "{{ clickhouse_networks_default }}", profile: "readonly", quota: "default", comment: "Example of user with readonly access"}
-user_default_password: "--password {{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:ch_default_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
+  - {name: "default", password: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:ch_default_usr_pass token={{ TEST_VAULT_TOKEN }} url={{ TEST_VAULT_ADDR }}') }}", networks: "{{ clickhouse_networks_default }}", profile: "default", quota: "default", comment: "Default user for login if user not defined"}
+  - {name: "readonly", password: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:ch_readonly_usr_pass token={{ TEST_VAULT_TOKEN }} url={{ TEST_VAULT_ADDR }}') }}", networks: "{{ clickhouse_networks_default }}", profile: "readonly", quota: "default", comment: "Example of user with readonly access"}
+user_default_password: "--password {{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:ch_default_usr_pass token={{ TEST_VAULT_TOKEN }} url={{ TEST_VAULT_ADDR }}') }}"
 
 clickhouse_users_custom:
   - name: "grafana"
-    password:  "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:ch_grafana_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
+    password:  "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:ch_grafana_usr_pass token={{ TEST_VAULT_TOKEN }} url={{ TEST_VAULT_ADDR }}') }}"
     dbs:
       - monitoring
     networks: '{{ clickhouse_networks_default }}'
     profile: default
     quota: default
   - name: "pdns_ch_usr"
-    password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:pdns_ch_usr token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}" 
+    password: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:pdns_ch_usr token={{ TEST_VAULT_TOKEN }} url={{ TEST_VAULT_ADDR }}') }}" 
     dbs:
       - pdns
     networks: '{{ clickhouse_networks_default }}'
@@ -38,7 +38,7 @@ clickhouse_users_custom:
 clickhouse_macros:
   cluster: "dns_saas"
   shard: "s1"
-  replica: "{{ ansible_hostname }}.dnsaas.prod.01.vmw.t1.loc"
+  replica: "{{ ansible_hostname }}.dnsaas.test.01.vmw.t1.loc"
   default_replica_path: "/clickhouse/tables/{shard}/{database}/{table}"
   default_replica_name: "{replica}"
 

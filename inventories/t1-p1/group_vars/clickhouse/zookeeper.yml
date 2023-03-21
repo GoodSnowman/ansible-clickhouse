@@ -1,12 +1,12 @@
 ---
 zookeeper_members: "{{ groups['clickhouse'] | map('extract', hostvars, 'ansible_default_ipv4') | map(attribute='address') | list }}"
 zookeeper_server_username: zookeeper_usr
-zookeeper_server_password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zookeeper_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
+zookeeper_server_password: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:zookeeper_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
 
 zookeeper_clients:
   - username: clickhouse
-    password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zk_clickhouse_usr_auth token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}" 
+    password: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:zk_clickhouse_usr_auth token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}" 
 
 zookeeper_jmx_username: monitoring
-zookeeper_jmx_password: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:zk_monitoring_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
+zookeeper_jmx_password: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:zk_monitoring_usr_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
 
