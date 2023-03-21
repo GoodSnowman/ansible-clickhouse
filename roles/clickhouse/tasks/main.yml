@@ -12,10 +12,12 @@
   tags: [always]
 
 - include_tasks: precheck.yml
-  tags: [always]
+  apply:
+    tags: [always]
 
 - include_tasks: params.yml
-  tags: [always]
+  apply:
+    tags: [always]
 
 - include_tasks:
     file: "{{ lookup('first_found', params) }}"
@@ -26,14 +28,12 @@
       files:
         - "install/{{ ansible_pkg_mgr }}.yml"
         - 'empty.yml'
-  tags: [install, clickhouse_install, clickhouse]
   when: not clickhouse_remove|bool
 
 - include_tasks: 
     file: configure/sys.yml
     apply:
       tags: [clickhouse_config, config_sys]
-  tags: [clickhouse_config, config_sys]
   when: not clickhouse_remove|bool
 
 - name: "Notify Handlers Now"
@@ -41,13 +41,13 @@
   meta: flush_handlers
 
 - include_tasks: service.yml
-  tags: [always]
+  apply:
+    tags: [always]
 
 - name: "Wait for Clickhouse Server to Become Ready"
   wait_for:
     port: "{{ clickhouse_tcp_port }}"
     delay: "{{ clickhouse_ready_delay }}"
-  tags: [always]
   when: not clickhouse_remove|bool
 
 - include_tasks:
@@ -61,12 +61,10 @@
     file: configure/dict.yml
     apply:
       tags: [clickhouse_config, config_dict]
-  tags: [clickhouse_config, config_dict]
   when: not clickhouse_remove|bool
 
 - include_tasks:
     file: remove.yml
     apply:
       tags: [remove]
-  tags: [remove]
   when: clickhouse_remove|bool
