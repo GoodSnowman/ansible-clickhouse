@@ -115,7 +115,7 @@ check ch test config:
   extends: .check_roles
   environment: test
   variables:
-    ROLE_TAGS: clickhouse_install,clickhouse_config,always
+    ROLE_TAGS: clickhouse_install,clickhouse_config
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
       when: manual
@@ -232,7 +232,7 @@ deploy clickhouse in TEST:
   environment: test
   stage: clickhouse
   variables:
-    ROLE_TAGS: clickhouse_install,clickhouse_config,always
+    ROLE_TAGS: clickhouse_install,clickhouse_config
   needs: ["check ch test config"]
   rules:
     - if: $CI_COMMIT_BRANCH == "test"
