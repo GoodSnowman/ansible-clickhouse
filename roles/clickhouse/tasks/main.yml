@@ -12,8 +12,10 @@
   tags: [always]
 
 - include_tasks: precheck.yml
+  tags: [always]
 
 - include_tasks: params.yml
+  tags: [always]
 
 - include_tasks:
     file: "{{ lookup('first_found', params) }}"
@@ -25,18 +27,21 @@
         - "install/{{ ansible_pkg_mgr }}.yml"
         - 'empty.yml'
   when: not clickhouse_remove|bool
+  tags: [clickhouse_install]
 
 - include_tasks: 
     file: configure/sys.yml
     apply:
       tags: [clickhouse_config, config_sys]
   when: not clickhouse_remove|bool
+  tags: [clickhouse_config]
 
 - name: "Notify Handlers Now"
-  tags: [always]
+  # tags: [always]
   meta: flush_handlers
 
 - include_tasks: service.yml
+  tags: [clickhouse_install]
 
 - name: "Wait for Clickhouse Server to Become Ready"
   wait_for:
