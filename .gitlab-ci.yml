@@ -2,13 +2,7 @@ variables:
   AIND: git-registry.service.t1-cloud.ru/sre/docker/ansible:${ANSIBLE_TAG}
   ANSIBLE_TAG: latest
   ANSIBLE_FORCE_COLOR: 'true'
-  DEPLOY_ENV: 't1-p1'
   ROLE_TAGS: 'all'
-# workflow:
-#   rules:
-#     - if: '$CI_PIPELINE_SOURCE == "web"'
-#     - if: $CI_COMMIT_TAG
-#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 stages:
   - check_mode
@@ -49,30 +43,90 @@ before_script:
   allow_failure: true
   when: manual
 
+
+###### Checking prod config ##################################################################
+
 check general config:
   extends: .check_roles
+  environment: prod
   variables:
     ROLE_TAGS: general_config,dns,ntp
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 check zk config:
   extends: .check_roles
+  environment: prod
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 check ch config:
   extends: .check_roles
+  environment: prod
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 check haproxy config:
   extends: .check_roles
+  environment: prod
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 check keepalived config:
   extends: .check_roles
+  environment: prod
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+###### Checking test config ##################################################################
+
+check general test config:
+  extends: .check_roles
+  environment: prod
+  variables:
+    ROLE_TAGS: general_config,dns,ntp
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+check zk test config:
+  extends: .check_roles
+  environment: prod
+  variables:
+    ROLE_TAGS: zookeeper_install,zookeeper_config
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+check ch test config:
+  extends: .check_roles
+  environment: prod
+  variables:
+    ROLE_TAGS: clickhouse_install,clickhouse_config
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+check haproxy test config:
+  extends: .check_roles
+  environment: prod
+  variables:
+    ROLE_TAGS: haproxy_install,haproxy_config
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+check keepalived test config:
+  extends: .check_roles
+  environment: prod
+  variables:
+    ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
 
 ################ Deploy HA Clickhouse cluster #######################################################
 
@@ -82,40 +136,109 @@ check keepalived config:
     - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
   allow_failure: false
 
+############### Deploy prod #########################################################################
+
 general:
   extends: .deploy
+  environment: prod
   stage: general
   variables:
     ROLE_TAGS: general_config,dns,ntp
   needs: ["check general config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 zookeeper:
   extends: .deploy
+  environment: prod
   stage: zookeeper
   variables:
     ROLE_TAGS: zookeeper_install,zookeeper_config
   needs: ["check zk config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 clickhouse:
   extends: .deploy
+  environment: prod
   stage: clickhouse
   variables:
     ROLE_TAGS: clickhouse_install,clickhouse_config
   needs: ["check ch config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 haproxy:
   extends: .deploy
+  environment: prod
   stage: haproxy
   variables:
     ROLE_TAGS: haproxy_install,haproxy_config
   needs: ["check haproxy config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 keepalived:
   extends: .deploy
+  environment: prod
   stage: keepalived
   variables:
     ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
   needs: ["check keepalived config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+############### Deploy test #########################################################################
+
+deploy general in TEST:
+  extends: .deploy
+  environment: prod
+  stage: general
+  variables:
+    ROLE_TAGS: general_config,dns,ntp
+  needs: ["check general config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+deploy zookeeper in TEST:
+  extends: .deploy
+  environment: prod
+  stage: zookeeper
+  variables:
+    ROLE_TAGS: zookeeper_install,zookeeper_config
+  needs: ["check zk config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+deploy clickhouse in TEST:
+  extends: .deploy
+  environment: prod
+  stage: clickhouse
+  variables:
+    ROLE_TAGS: clickhouse_install,clickhouse_config
+  needs: ["check ch config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+deploy haproxy in TEST:
+  extends: .deploy
+  environment: prod
+  stage: haproxy
+  variables:
+    ROLE_TAGS: haproxy_install,haproxy_config
+  needs: ["check haproxy config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
+
+deploy keepalived in TEST:
+  extends: .deploy
+  environment: prod
+  stage: keepalived
+  variables:
+    ROLE_TAGS: keepalived_install,keepalived_config,keepalived_exporter
+  needs: ["check keepalived config"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"
 
 ############# deploy Exporters ######################################################
 
@@ -128,12 +251,19 @@ node exporter:
     ROLE_TAGS: node_exporter
   allow_failure: false
   when: manual
+  environment: prod
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
-# clickhouse_remove:
-#   extends: 
-#   stage: clickhouse
-#   variables:
-#     ROLE_TAGS: remove
-#   only:
-#     variables:
-#     - $clickhouse_remove == "true"
+node exporter test:
+  stage: exporters
+  image: ${AIND}
+  script:
+    - ansible-playbook -i inventories/${DEPLOY_ENV}/hosts clickhouse_infra.yml -u ${SSH_LOGIN} --tags=${ROLE_TAGS} -e VAULT_ADDR=${VAULT_ADDR} -e "VAULT_TOKEN=${VAULT_TOKEN}" --diff
+  variables:
+    ROLE_TAGS: node_exporter
+  allow_failure: false
+  when: manual
+  environment: prod
+  rules:
+    - if: $CI_COMMIT_BRANCH == "test"    
