@@ -11,11 +11,11 @@ haproxy_frontend:
       - listen: "{{ keepalived_lb_vip }}:{{ clickhouse_tcp_port }}"
     mode: tcp
     default_backend: ch-back-tcp
-  - name: clickhouse_tcp
-    bind:
-      - listen: "0.0.0.0:{{ ch_frontend_tcp_port }}"
-    mode: tcp
-    default_backend: ch-back-tcp
+  # - name: clickhouse_tcp
+  #   bind:
+  #     - listen: "0.0.0.0:{{ ch_frontend_tcp_port }}"
+  #   mode: tcp
+  #   default_backend: ch-back-tcp
   - name: clickhouse_http
     bind:
       - listen: "{{ keepalived_lb_vip }}:{{ clickhouse_http_port }}"
