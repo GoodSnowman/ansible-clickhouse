@@ -29,6 +29,8 @@
 
 - include_tasks: 
     file: configure/sys.yml
+    apply:
+      tags: [clickhouse_config]
   when: not clickhouse_remove|bool
   tags: [clickhouse_config]
 
