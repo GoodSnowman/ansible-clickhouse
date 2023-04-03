@@ -5,12 +5,16 @@
     state: present
     update_cache: true
   tags: [ntp]
+
 - name: Enable systemd-timesyncd unit
   systemd:
     name: systemd-timesyncd
     state: started
     enabled: true
   tags: [ntp]
+  when:
+    - not ansible_check_mode
+
 - name: Configure NTP servers
   template:
     src: timesyncd.conf.j2
@@ -21,3 +25,5 @@
     backup: true
   notify: restart systemd-timesyncd
   tags: [ntp]
+  when:
+    - not ansible_check_mode

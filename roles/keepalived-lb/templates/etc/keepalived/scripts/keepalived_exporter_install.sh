@@ -8,6 +8,8 @@ wget https://nexus-dev.t1.cloud/repository/exporters/keepalived_exporter/v$VERSI
 mv keepalived_exporter /usr/local/bin/keepalived_exporter &&
 chmod +x /usr/local/bin/keepalived_exporter
 
+useradd -M -N -s /usr/sbin/nologin keepalived
+
 mv keepalived_exporter.service /etc/systemd/system/keepalived_exporter.service &&
 chown root:root /etc/systemd/system/keepalived_exporter.service &&
 
