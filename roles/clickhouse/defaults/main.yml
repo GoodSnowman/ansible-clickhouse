@@ -87,6 +87,14 @@ clickhouse_dbs_custom: []
 
 clickhouse_dbs: "{{ clickhouse_dbs_default + clickhouse_dbs_custom }}"
 
+clickhouse_response_log_tables: 
+  - {name: "ext_response_logs", engine: "ReplicatedMergeTree", cluster: "dns_saas", replica_path: "/clickhouse/tables/{shard}/{database}/{table}", replica_name: "{replica}"}
+  - {name: "int_response_logs", engine: "ReplicatedMergeTree", cluster: "dns_saas", replica_path: "/clickhouse/tables/{shard}/{database}/{table}", replica_name: "{replica}"}
+
+clickhouse_query_log_tables:
+  - {name: "ext_query_logs", engine: "ReplicatedMergeTree", cluster: "dns_saas", replica_path: "/clickhouse/tables/{shard}/{database}/{table}", replica_name: "{replica}"}
+  - {name: "int_query_logs", engine: "ReplicatedMergeTree", cluster: "dns_saas", replica_path: "/clickhouse/tables/{shard}/{database}/{table}", replica_name: "{replica}"}
+
 clickhouse_logger:
   level: information
   log: "{{ clickhouse_path_logdir }}/clickhouse-server.log"

@@ -46,7 +46,7 @@
     host: "{{ ansible_default_ipv4.address }}"
     port: "{{ clickhouse_tcp_port }}"
     delay: "{{ clickhouse_ready_delay }}"
-  tags: [always]  
+  tags: [clickhouse_install]  
   when: not clickhouse_remove|bool
 
 - include_tasks:

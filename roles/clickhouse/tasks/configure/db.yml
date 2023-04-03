@@ -23,3 +23,25 @@
   with_items: "{{ clickhouse_dbs }}"
   when: (item.state is undefined or item.state == 'present') and item.name not in existing_databases.stdout_lines
   tags: [clickhouse_config]
+
+- name: Config | Create query_logs tables for pdns logger
+  command: |
+    clickhouse-client -h {{ ansible_default_ipv4.address }} -u default {{ user_default_password }} --port {{ clickhouse_tcp_port }}
+    -q 'CREATE TABLE IF NOT EXISTS `{{ item.name }}`
+    {% if item.cluster is defined %}ON CLUSTER `{{ item.cluster }}`{% endif %}
+    (log_timestamp DateTime, client_ip String, query String)
+    {% if item.engine is defined %}ENGINE = `{{ item.engine }}`(`{{ item.replica_path }}`/`{{ item.name }}`, `{{ item.replica_name }}`){% endif %}'
+  with_items: "{{ clickhouse_query_log_tables }}"
+  when: (item.state is undefined or item.state == 'present') and item.name not in existing_databases.stdout_lines
+  tags: [clickhouse_config]
+
+- name: Config | Create response_logs tables for pdns logger
+  command: |
+    clickhouse-client -h {{ ansible_default_ipv4.address }} -u default {{ user_default_password }} --port {{ clickhouse_tcp_port }}
+    -q 'CREATE TABLE IF NOT EXISTS `{{ item.name }}`
+    {% if item.cluster is defined %}ON CLUSTER `{{ item.cluster }}`{% endif %}
+    (log_timestamp DateTime, client_ip String, fqdn String, response_type UInt16, data String)
+    {% if item.engine is defined %}ENGINE = `{{ item.engine }}`(`{{ item.replica_path }}`/`{{ item.name }}`, `{{ item.replica_name }}`){% endif %}'
+  with_items: "{{ clickhouse_response_log_tables }}"
+  when: (item.state is undefined or item.state == 'present') and item.name not in existing_databases.stdout_lines
+  tags: [clickhouse_config]
