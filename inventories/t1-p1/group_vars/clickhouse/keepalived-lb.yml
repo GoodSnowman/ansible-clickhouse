@@ -16,4 +16,4 @@ keepalived_lb_vrrp_instance_name: VRRP_1
 keepalived_lb_virtual_router_id: 50
 keepalived_lb_auth: true
 keepalived_lb_auth_type: PASS
-keepalived_lb_auth_pass: "{{ lookup('hashi_vault', 'deployment/data/test/dns-as-a-service:keepalived_lb_auth_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
+keepalived_lb_auth_pass: "{{ lookup('hashi_vault', 'deployment/data/prod/dns-as-a-service:keepalived_lb_auth_pass token={{ VAULT_TOKEN }} url={{ VAULT_ADDR }}') }}"
