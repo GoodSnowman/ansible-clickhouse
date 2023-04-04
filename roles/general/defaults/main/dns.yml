@@ -8,11 +8,11 @@ general_dns_nsupdate_server: '{{ general_dns_servers | first }}'
 
 # Search paths that will be written to resolv.conf
 general_dns_search:
-  - test.01.vmw.t1.loc
+  - prod.01.vmw.t1.loc
 # Nameservers that will be written to resolv.conf
 general_dns_servers:
-  - 10.13.8.1
-  - 10.13.8.2
+  - 10.13.24.1
+  - 10.13.24.2
 
 # The host from which nsupdate is running.
 general_dns_managing_server: localhost

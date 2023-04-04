@@ -27,12 +27,12 @@
   when: repository_source == 'external'
   tags: [haproxy_install]
 
-# - name: Add repository from nexus(when var repository_source is 'internal')
-#   ansible.builtin.apt_repository:
-#     repo: "{{ haproxy_proxy_repository }}"
-#     state: present
-#   when: repository_source == 'internal'
-#   tags: [haproxy_install]
+- name: Add repository from nexus(when var repository_source is 'internal')
+  ansible.builtin.apt_repository:
+    repo: "{{ haproxy_proxy_repository }}"
+    state: present
+  when: repository_source == 'internal'
+  tags: [haproxy_install]
   
 - name: Install haproxy
   ansible.builtin.apt:

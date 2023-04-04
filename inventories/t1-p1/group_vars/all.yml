@@ -1,4 +1,8 @@
 keepalived_lb_vip: 10.13.248.50
+
+nexus_keepalived_package: "https://nexus.t1.cloud/repository/exporters/keepalived_exporter/keepalived_exporter.service"
+nexus_keepalived_exporter: "https://nexus.t1.cloud/repository/exporters/keepalived_exporter/v$VERSION/keepalived_exporter"
+
 ch_frontend_tcp_port: 9000
 
 # Enable NTP configuration.

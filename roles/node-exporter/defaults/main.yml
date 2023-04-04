@@ -1,6 +1,6 @@
 ---
 node_exporter_version: 1.5.0
-node_exporter_repository_url: https://nexus-dev.t1.cloud/repository/exporters/node_exporter
+node_exporter_repository_url: https://nexus.t1.cloud/repository/exporters/node_exporter
 node_exporter_group_name: node-exporter
 node_exporter_user_name: node-exporter
 node_exporter_dir: /opt/node_exporter

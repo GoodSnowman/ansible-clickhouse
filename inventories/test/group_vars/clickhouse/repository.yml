@@ -25,3 +25,6 @@ clickhouse_proxy_repository: "deb https://nexus-dev.t1.cloud/repository/apt-clic
 clickhouse_proxy_repo_key: "https://nexus-dev.t1.cloud/repository/gpg-keys/clickhouse/gpg"
 clickhouse_repository: "deb https://packages.clickhouse.com/deb stable main"
 clickhouse_repo_key: "https://packages.clickhouse.com/deb/dists/stable/Release.gpg"
+
+# Node exporter
+node_exporter_repository_url: https://nexus-dev.t1.cloud/repository/exporters/node_exporter

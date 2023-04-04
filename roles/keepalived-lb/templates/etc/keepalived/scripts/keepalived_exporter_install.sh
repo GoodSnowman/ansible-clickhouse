@@ -2,8 +2,8 @@
 
 VERSION="1.2.0"
 
-wget https://nexus-dev.t1.cloud/repository/exporters/keepalived_exporter/keepalived_exporter.service &&
-wget https://nexus-dev.t1.cloud/repository/exporters/keepalived_exporter/v$VERSION/keepalived_exporter &&
+wget "{{ nexus_keepalived_package }}" &&
+wget "{{ nexus_keepalived_exporter}}" &&
 
 mv keepalived_exporter /usr/local/bin/keepalived_exporter &&
 chmod +x /usr/local/bin/keepalived_exporter
