@@ -23,7 +23,9 @@ haproxy_listen:
     description: Global statistics
     bind:
       - listen: 0.0.0.0:8404
-    mode: http 
+    mode: http
+    option:
+      - http-use-htx
     stats:
       enable: true
       refresh: 10s 
